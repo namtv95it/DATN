@@ -1,0 +1,41 @@
+<div class="col-lg-12 col-md-12">
+  <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+    <div class="dash__pad-2">
+      <h1 class="dash__h1 u-s-m-b-14">Thông tin cá nhân</h1>
+      <span class="dash__text u-s-m-b-30">Xem tất cả thông tin của bạn, bạn có thể tùy chỉnh hồ sơ của mình.</span>
+      <div class="row">
+        <div class="col-4">
+          <img style="border-radius: 200px;" class="position-relative img-fluid"
+               [src]="avtUrl ? avtUrl : customer?.photo">
+          <button class="btn_posi btn btn-light btn-outline-dark" (click)="OpenDialogImage()">
+            <i class="fas fa-camera fs-2"></i>
+          </button>
+        </div>
+        <div class="offset-1 col-7">
+          <div class="u-s-m-t-45 d-flex justify-content-between">
+            <b>Họ tên:</b>
+            <span>{{customer?.fullname}}</span>
+          </div>
+          <div class="u-s-m-t-30 d-flex justify-content-between">
+            <b>Email:</b>
+            <span>{{customer?.email}}</span>
+          </div>
+          <div class="u-s-m-t-30 d-flex justify-content-between">
+            <b>Số điện thoại: </b>
+            <span>{{customer?.phone}}</span>
+          </div>
+          <div class="u-s-m-t-30 d-flex justify-content-between">
+            <b>Ngày sinh: </b>
+            <span>{{customer?.birthDate | date : 'dd/MM/yyyy'}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-lg-12">
+          <button class="dash__custom-link btn--e-transparent-brand-b-2" (click)="openDialogUpdate()"> Sửa thông tin</button>
+          <button class="dash__custom-link btn--e-brand-b-2 mx-5" (click)="openDialogChangePassword()">Đổi mật khẩu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

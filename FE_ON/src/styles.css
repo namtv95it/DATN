@@ -1,0 +1,73 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+#topScroll {
+  background-color: black;
+  color: #FFFFFF;
+  border-radius: 100px;
+}
+
+.top-50{
+   top: 39% !important;
+}
+
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.btn-primary-custom {
+  color: #ffffff;
+  background-color: #ff4500;
+  border: 2px solid #ff4500;
+  transition: background-color 0.5s ease-in, border-color 0.5s ease-in;
+}
+.btn-primary-custom-disabled {
+  color: #ffffff;
+  background-color: #ff8371;
+  border: 2px solid #ff8371;
+  transition: background-color 0.5s ease-in, border-color 0.5s ease-in;
+}
+
+.btn-grey-custom {
+  color: #333333;
+  background-color: #f5f5f5;
+  border: 2px solid #f5f5f5;
+  transition: background-color 0.5s ease-in, border-color 0.5s ease-in;
+}
+
+.btn-custom--smooth {
+  padding: 10px 30px;
+  border-radius: 6px;
+}
+
+.btn-custom--padding{
+  padding: 10px 30px;
+}
+
+.hover-link:hover{
+  color: #ffffff;
+}
+.hover-link-orange:hover{
+  color: #ff4500;
+}
+.hover-link-black:hover{
+  color: #333333;
+}

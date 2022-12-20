@@ -1,0 +1,219 @@
+<div *ngIf="checkLoadData" class="loading">
+  <div
+    class="spinner-border text-danger spinner-center"
+    role="status"
+  >
+  </div>
+</div>
+
+<div  id="header" class="u-s-p-y-60">
+  <div class="section__content">
+    <div class="container">
+      <div class="breadcrumb row">
+        <div class="breadcrumb__wrap">
+          <ul class="breadcrumb__list">
+            <li class="has-separator">
+
+              <a routerLink="/home">Trang chủ</a></li>
+            <li class="is-marked">
+
+              <a routerLink="/products">Sản phẩm</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="u-s-p-y-90 p-0">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-3">
+        <div class="shop-w-master">
+          <h1 class="shop-w-master__heading u-s-m-b-30"><i class="fas fa-filter u-s-m-r-8"></i>
+            <span>LỌC</span></h1>
+          <div class="shop-w-master__sidebar">
+            <div class="u-s-m-b-30">
+              <div class="shop-w">
+                <div class="shop-w__intro-wrap">
+                  <h1 class="shop-w__h">Danh mục</h1>
+
+                  <span class="fas fa-minus shop-w__toggle" data-target="#s-category" data-toggle="collapse"></span>
+                </div>
+                <div class="shop-w__wrap collapse show" id="s-category">
+                  <ul class="shop-w__list-2">
+                    <li *ngFor="let cate of litsCate ">
+                      <div class="check-box">
+                        <input type="checkbox" id="{{cate.name}}" (click)="getAllByCategory(cate.id)">
+                        <div class="check-box__state check-box__state--primary">
+                          <label class="check-box__label " for="{{cate.name}}">{{cate.name}}</label>
+                        </div>
+                      </div>
+                      <span class="shop-w__total-text">({{cate.quantity}})</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="u-s-m-b-30">
+              <div class="shop-w">
+                <div class="shop-w__intro-wrap">
+                  <h1 class="shop-w__h">Khoảng giá</h1>
+                  <span class="fas fa-minus shop-w__toggle" data-target="#s-price" data-toggle="collapse"></span>
+                </div>
+                <div class="shop-w__wrap collapse show" id="s-price">
+                  <form class="shop-w__form-p" [formGroup]="formPrice">
+                    <div class="shop-w__form-p-wrap ">
+                      <div>
+                        <label for="price-min"></label>
+                        <input class="input-text input-text--primary-style"
+                               onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"
+                               formControlName="min" type="text" id="price-min" placeholder="Thấp nhất"></div>
+                      <div>
+                        <label for="price-max"></label>
+                        <input class="input-text input-text--primary-style"
+                               onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"
+                               formControlName="max" type="text" id="price-max" placeholder="Cao nhất"></div>
+                      <div>
+                        <button class="btn btn-warning" type="button" (click)="getAllByPrice()">
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </div>
+                      <div *ngIf=" this.formPrice?.hasError('checkprice') ">
+                        <small class="text-danger">Vui lòng nhập khoảng giá phù hợp</small>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="u-s-m-b-30">
+              <div class="shop-w">
+                <div class="shop-w__intro-wrap">
+                  <h1 class="shop-w__h">Màu sắc</h1>
+                  <span class="fas fa-minus shop-w__toggle" data-target="#s-color" data-toggle="collapse"></span>
+                </div>
+                <div class="shop-w__wrap collapse show" id="s-color">
+                  <ul class="shop-w__list gl-scroll">
+                    <li *ngFor=" let color of listColor ">
+                      <div class="color__check">
+                        <input type="checkbox" id="jet" (click)="getAllByColor( color.id ) ">
+                        <label class="color__check-label" for="jet" [style.background-color]="color.code"></label>
+                      </div>
+                      <span class="shop-w__total-text">({{color.quantity}})</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="u-s-m-b-30">
+              <div class="shop-w">
+                <div class="shop-w__intro-wrap">
+                  <h1 class="shop-w__h">Kích cỡ</h1>
+                  <span class="fas fa-minus collapsed shop-w__toggle" data-target="#s-size"
+                        data-toggle="collapse"></span>
+                </div>
+                <div class="shop-w__wrap collapse" id="s-size">
+                  <ul class="shop-w__list gl-scroll">
+                    <li *ngFor="let size of listSize ">
+                      <a href="#header" class="check-box">
+                        <input type="checkbox" id="{{size.code}}" (click)="getAllBySize(size.id)">
+                        <div class="check-box__state check-box__state--primary">
+                          <label class="check-box__label" for="{{size.code}}">{{size.code}}</label>
+                        </div>
+                      </a>
+                      <span class="shop-w__total-text">({{size.quantity}})</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--                    Méo đc xóa-->
+      <div class="col-lg-9">
+        <div class="shop-p">
+
+          <div  class="shop-p__toolbar u-s-m-b-30">
+            <div class="shop-p__tool-style d-flex justify-content-end">
+              <div class="tool-style__group u-s-m-b-8">
+              <form>
+                <div class="tool-style__form-wrap">
+                  <div class="u-s-m-b-8">
+                    <select class="select-box select-box--transparent-b-2" (click)="showProInPage()"
+                            [(ngModel)]="pageSize" name="pageSize">
+                      <option value="8"> Hiển thị: 8</option>
+                      <option value="12"> Hiển thị: 12</option>
+                      <option value="16"> Hiển thị: 16</option>
+                    </select>
+                  </div>
+                  <div class="u-s-m-b-8"><select class="select-box select-box--transparent-b-2" (click)="showProSort()"
+                                                 [(ngModel)]="sortPrice" name="sortPrice">
+                    <option disabled value="0">Giá</option>
+                    <option value="1">Giá: Thấp đến cao</option>
+                    <option value="2">Giá: Cao đến thấp</option>
+                  </select></div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="shop-p__collection">
+            <div class="row is-grid-active">
+              <div class="col-lg-3 col-md-4 col-sm-6" *ngFor=" let pro of listPro ">
+                <div class="product-m">
+                  <div class="product-m__thumb">
+
+                    <a class="aspect aspect--bg-grey aspect--square u-d-block" style="height: 320px"
+                       [routerLink]="['/product-detail/', pro.id]">
+                      <img class="aspect__img" src="{{pro.thumnail}}" alt="">
+                    </a>
+                    <div class="product-m__add-cart">
+                      <a class="btn--e-brand btn--e-brand-hover" (click)="OpenProductView(pro)">Xem nhanh</a>
+                    </div>
+                  </div>
+                  <div class="product-m__content">
+                    <div class="product-m__name">
+
+                      <a [routerLink]="['/product-detail/', pro.id]">{{pro.name}}</a></div>
+                    <app-stars [rating]="takeRatingPro(pro.id)"></app-stars>
+                    <div class="product-m__price">{{pro.price | currency: 'VND' : 'symbol' : '4.0-0'}}</div>
+                    <div class="product-m__hover">
+                      <div class="product-m__preview-description">
+                        <span>{{pro.description}}</span>
+                      </div>
+                      <div class="product-m__wishlist">
+                        <a class="far fa-heart" href="#" data-tooltip="tooltip" data-placement="top"
+                           title="Add to Wishlist"></a></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="u-s-p-y-60">
+              <!--====== Pagination ======-->
+              <div *ngIf="totalPage == 0">
+                  không có dữ liệu
+              </div>
+              <ul class="shop-p__pagination">
+                <li class="is-active" *ngIf="totalPage != 0">
+                  <a type="button" [class.disabled-a]="checkPage == 0" style="background-color: #AAAAAA" (click)="nextPage(0)"> <i class="fas fa-angle-double-left"></i> </a>
+                </li>
+                <li class="is-active" *ngFor=" let page of listPage" [class]=" showPage(checkPage , page) ? 'mx-1' : ''" >
+                  <a  type="button" *ngIf="showPage( checkPage , page)" [class.disabled-a]="checkPage == page" style="background-color: #AAAAAA" [class]="checkPage == page ? 'bg-dark text-white' : ''"
+                     (click)="nextPage(page)" >{{page + 1}}</a>
+                </li>
+                <li class="is-active" *ngIf="checkPage != totalPage - 1 && checkPage != totalPage - 2 && totalPage != 0">
+                  <a class="disabled-a">...</a>
+                </li>
+                <li class="is-active" *ngIf="totalPage != 0">
+                  <a type="button" [class.disabled-a]="checkPage == totalPage-1" style="background-color: #AAAAAA" (click)="nextPage(totalPage - 1 )"> <i class="fas fa-angle-double-right"></i> </a>
+                </li>
+              </ul>
+              <!--====== End - Pagination ======-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

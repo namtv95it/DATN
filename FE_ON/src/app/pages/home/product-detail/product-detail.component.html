@@ -1,0 +1,372 @@
+<div class="u-s-p-y-60 ">
+  <!--====== Section Content ======-->
+  <div class="section__content">
+    <div class="container">
+      <div class="breadcrumb row">
+        <div class="breadcrumb__wrap">
+          <ul class="breadcrumb__list">
+            <li class="has-separator">
+              <a href="#">Trang chủ</a>
+            </li>
+            <li class="is-marked has-separator">
+              <a href="#">{{product?.category?.name}}</a>
+            </li>
+            <li class="is-marked">
+              <a href="#">{{product?.name}}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--====== Section 1 ======-->
+<div class="u-s-p-t-90 p-0">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-7">
+        <!--====== Product Detail Zoom ======-->
+        <div class="pd u-s-m-b-30 row">
+          <div class="col-3">
+            <ngx-slick-carousel class="carousel p-0 position-relative" #slickModal="slick-carousel" [config]="slideConfissg"
+                                (init)="slickInit($event)" (breakpoint)="breakpoint($event)" (afterChange)="afterChange($event)"
+                                (beforeChange)="beforeChange($event)" >
+
+              <div class="row" >
+                <div class="col-12 mb-2">
+                  <img src="{{product?.thumnail}}" (click)="changThumnail( product?.thumnail )" class="img-fluid" [class]="product?.thumnail === thumnail ? 'clickImage' : '' "
+                  >
+                </div>
+              </div>
+              <div ngxSlickItem class="row " *ngFor="let x of productImage" (click)="changThumnail( x.name )">
+                <div class="col-12 mb-2">
+                  <img src="{{x.name}}" class="img-fluid" [class]="x.name === thumnail ? 'clickImage' : '' "
+                  >
+                </div>
+              </div>
+            </ngx-slick-carousel>
+          </div>
+          <div class="col-9 ">
+            <img src="{{thumnail}}" class="u-img-fluid">
+          </div>
+        </div>
+        <!--====== End - Product Detail Zoom ======-->
+      </div>
+      <div class="col-lg-5">
+        <!--====== Product Right Side Details ======-->
+        <div class="pd-detail">
+          <div>
+            <span class="pd-detail__name fs-4">{{product?.name}}</span>
+          </div>
+          <div>
+            <div class="pd-detail__inline">
+              <span class="pd-detail__price">{{product?.price | currency: 'VND' : 'symbol' : '4.0' }}</span>
+
+<!--              <span class="pd-detail__discount">(76% OFF)</span-->
+<!--              >-->
+<!--              <del class="pd-detail__del">$28.97</del>-->
+            </div>
+          </div>
+          <div class="u-s-m-b-15">
+            <div class="pd-detail__rating gl-rating-style">
+              <app-stars [rating]="takeRatingPro(product?.id)"></app-stars>
+              <span class="pd-detail__review u-s-m-l-4">
+                        <a data-click-scroll="#view-review">23 Reviews</a></span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="u-s-m-b-15">
+          <div class="pd-detail__inline">
+            <span class="pd-detail__stock">Tổng sản phẩm còn lại {{ total === 0 ? 0 : total}}</span>
+          </div>
+        </div>
+        <div class="u-s-m-b-15">
+          <form class="pd-detail__form" #f="ngForm">
+            <div class="u-s-m-b-15">
+              <span class="pd-detail__label u-s-m-b-8">Màu sắc:</span>
+              <div class="pd-detail__color">
+                <div class="color__radio" *ngFor="let c of listColor">
+                  <input type="radio" id="jet" name="color"
+                         [class.disabled-color]="listSize.id != undefined ? !color.includes(c.id) :false"
+                         [(ngModel)]="colorModel"
+                         [value]="c.id"
+                         [checked]="listColor.id ? listColor.id == c.id : false"
+                         (click)="color.length == 0 || color.includes(c.id) ? onClickColor(c.id) : ''"
+                         (change)="onClickProductDetail()"/>
+                  <label
+                    class="color__radio-label"
+                    for="jet"
+                    [class.disabled-color]=" listSize.id != undefined ? !color.includes(c.id)  :false"
+                    [class.low-opacity]=" listSize.id != undefined ?!color.includes(c.id)  :false"
+                    [style.background-color]="c.code.code"
+                  ></label>
+                </div>
+              </div>
+            </div>
+            <div class="u-s-m-b-15">
+              <span class="pd-detail__label u-s-m-b-8">Kích thuớc: </span>
+              <div class="pd-detail__size">
+                <div class="size__radio" *ngFor="let s of listSize">
+                  <input type="radio" id="xs" name="size"
+                         [class.disabled-size]=" listColor.id != undefined ?!size.includes(s.id) : false"
+                         [value]="s.id"
+                         [checked]="listSize.id ? listSize.id == s.id : false"
+                         [(ngModel)]="sizeModel"
+                         (click)="onClickSize(s.id)"
+                         (change)="onClickProductDetail()"/>
+                  <label class="size__radio-label" for="xs"
+                         [class.disabled-size]=" listColor.id != undefined ?!size.includes(s.id) : false">
+                    {{s.code}}
+                  </label>
+                </div>
+              </div>
+            </div>
+            <p *ngIf="listSize.id != null && listColor.id != null">
+              Số lượng còn lại: {{countProductDetail !== undefined ? countProductDetail : 0}}
+            </p>
+            <div class="pd-detail-inline-2">
+              <div class="u-s-m-b-15">
+                <!--====== Input Counter ======-->
+                <div class="input-counter">
+                  <input
+                    class="input-counter__text input-counter--text-primary-style"
+                    type="text"
+                    name="quantity"
+                    numberOnly
+                    [minValue]="1"
+                    [maxValue]="countProductDetail"
+                    [(ngModel)]="productQuantity"
+                    (change)="onChangeInput($event)"
+                  />
+                </div>
+                <!--====== End - Input Counter ======-->
+              </div>
+            </div>
+            <p *ngIf="message" class="text-danger">{{message}}</p>
+            <div class="u-s-m-b-15">
+              <button class="btn btn-warning" type="button" (click)="onAddToCart(f)">
+                Thêm vào giỏ hàng
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!--====== End - Product Right Side Details ======-->
+    </div>
+  </div>
+</div>
+
+
+<!--====== Product Detail Tab ======-->
+<div class="u-s-p-y-90">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="pd-tab">
+          <div class="u-s-m-b-30">
+            <ul class="nav pd-tab__list">
+              <li class="nav-item active">
+                <a class="nav-link" data-toggle="tab" href="#pd-desc">Mô tả</a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link "
+                  id="view-review"
+                  data-toggle="tab"
+                  href="#pd-rev">
+                  Đánh giá
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="tab-content">
+            <!--====== Tab 1 ======-->
+            <div class="tab-pane fade show active" id="pd-desc">
+              <div class="pd-tab__desc">
+                <div class="u-s-m-b-15">
+                  <p>
+                    {{product?.description}}
+                  </p>
+                </div>
+                <div class="u-s-m-b-15">
+                  <h4>Thông tin sản phẩm</h4>
+                </div>
+                <div class="u-s-m-b-15">
+                  <div class="pd-table gl-scroll">
+                    <table>
+                      <tbody>
+                      <tr>
+                        <td>Kích cỡ</td>
+                        <td>
+                          {{sizeDescription}}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Màu sắc</td>
+                        <td>{{colorDescription}}</td>
+                      </tr>
+                      <tr>
+                        <td>Shipping Weight (kg)</td>
+                        <td>0.5</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--====== End - Tab 1 ======-->
+
+            <!--====== Tab 3 ======-->
+            <div class="tab-pane " id="pd-rev">
+              <div class="pd-tab__rev">
+                <div class="u-s-m-b-30">
+                  <form class="pd-tab__rev-f1">
+                    <div class="rev-f1__group">
+                      <div class="u-s-m-b-15">
+                        <h2>
+                        </h2>
+                      </div>
+                      <div class="u-s-m-b-15">
+                        <label for="sort-review"></label
+                        ><select
+                        class="select-box select-box--primary-style"
+                        id="sort-review"  *ngIf="changPage.length != 0">
+                        <option selected>Sort by: Best Rating</option>
+                        <option>Sort by: Worst Rating</option>
+                      </select>
+                      </div>
+                    </div>
+                    <div class="rev-f1__review" *ngFor="let rating of listRatingByPro ">
+                      <div class="review-o u-s-m-b-15">
+
+                        <div class="review-o__info u-s-m-b-8">
+                          <span class="review-o__name">{{rating.fullname}}</span>
+                          <span class="review-o__date"
+                          >{{rating.createDate | date: "hh:mm:ss dd-MM-yyyy"}}</span
+                          >
+                        </div>
+                        <div class=" gl-rating-style u-s-m-b-8">
+                          <app-stars [rating]="rating.rating"></app-stars>
+                        </div>
+                        <p class="review-o__text">
+                          {{rating.content}}
+                        </p>
+                        <div class="row d-flex flex-row">
+                          <div class="col-2" *ngFor="let rateImg of takeListRatingImage(rating.id)">
+                               <img  style="height: 100px;" class="img-fluid" src="{{rateImg.name}}">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="u-s-p-y-60">
+                  <!--====== Pagination ======-->
+                  <ul class="shop-p__pagination">
+                    <li class="is-active " *ngIf="changPage.length != 0">
+                      <a type="button" [class.disabled-a]="checkPage == 0"  style="background-color: #AAAAAA" (click)="nextPage(0)"> <i class="fas fa-angle-double-left"></i> </a>
+                    </li>
+                    <li class="is-active" *ngFor=" let page of changPage() ">
+                      <a  type="button" [class.disabled-a]="checkPage == page" style="background-color: #AAAAAA" [class]="checkPage == page ? 'bg-dark text-white' : ''"
+                         (click)="nextPage(page)" >{{page + 1}}</a>
+                    </li>
+                    <li class="is-active" *ngIf="changPage.length != 0">
+                      <a type="button" [class.disabled-a]="checkPage == totalPage - 1 " style="background-color: #AAAAAA" (click)="nextPage(totalPage - 1 )"> <i class="fas fa-angle-double-right"></i> </a>
+                    </li>
+                  </ul>
+                  <!--====== End - Pagination ======-->
+                </div>
+
+              </div>
+            </div>
+            <!--====== End - Tab 3 ======-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--====== End - Product Detail Tab ======-->
+<div class="u-s-p-b-90">
+  <!--====== Section Intro ======-->
+  <div class="section__intro u-s-m-b-46">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="section__text-wrap">
+            <h1 class="section__heading u-c-secondary u-s-m-b-12">
+              Sản phẩm liên quan
+            </h1>
+            <span class="section__span u-c-grey">PRODUCTS THAT CUSTOMER VIEWED</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row col-12 mt-5">
+        <ngx-slick-carousel class="carousel p-0 row" #slickModal="slick-carousel" [config]="slideConfig"
+                            (init)="slickInit($event)" (breakpoint)="breakpoint($event)"
+                            (afterChange)="afterChange($event)" >
+          <div ngxSlickItem *ngFor="let pro of listPro "
+               class="slide col-12">
+            <div class="product-o product-o--hover-on product-o--radius">
+              <a href="/product-detail/{{pro.id}}">
+                <div class="product-o__wrap">
+                  <a class="aspect aspect--bg-grey aspect--square u-d-block">
+                    <img class="w-100" src="{{pro.thumnail}}" alt=""/>
+                  </a>
+                </div>
+              </a>
+              <div class="product-o__action-wrap">
+                <ul class="product-o__action-list text-white">
+                  <li>
+                    <a
+                      data-modal="modal"
+                      data-modal-id="#quick-look"
+                      data-tooltip="tooltip"
+                      data-placement="top"
+                      title="xem nhanh"
+                    ><i class="fas fa-search-plus"></i
+                    ></a>
+                  </li>
+                  <li>
+                    <a
+                      data-modal="modal"
+                      data-modal-id="#add-to-cart"
+                      data-tooltip="tooltip"
+                      data-placement="top"
+                      title="Add to Cart"
+                    ><i class="fas fa-plus-circle"></i
+                    ></a>
+                  </li>
+                </ul>
+              </div>
+              <span class="product-o__name">
+                      <a href="/product-detail/{{pro.id}}">{{pro.name}}</a>
+                    </span>
+              <app-stars [rating]="takeRatingPro(pro.id)"></app-stars>
+              <span class="product-o__price">{{pro.price | currency:'VND':'symbol':'4.0' }}
+                <span class="product-o__discount">$160.00</span>
+                    </span>
+            </div>
+          </div>
+
+        </ngx-slick-carousel>
+      </div>
+    </div>
+  </div>
+  <!--====== End - Section Intro ======-->
+
+  <!--====== Section Content ======-->
+  <div class="section__content">
+    <div class="container">
+
+    </div>
+  </div>
+  <!--====== End - Section Content ======-->
+</div>
+<!--====== End - Section 1 ======-->
+

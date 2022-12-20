@@ -1,0 +1,362 @@
+<ng-container *ngIf="carts.length > 0">
+  <!--====== Section 1 ======-->
+  <div class="u-s-p-y-30">
+    <!--====== Section Content ======-->
+    <div class="section__content">
+      <div class="container">
+        <div class="breadcrumb row">
+          <div class="breadcrumb__wrap">
+            <ul class="breadcrumb__list">
+              <li class="has-separator">
+                <a routerLink="/home">Trang chủ</a>
+              </li>
+              <li class="is-marked">
+                <a routerLink="/cart">Giỏ hàng</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--====== End - Section 1 ======-->
+
+  <!--====== Section 2 ======-->
+  <div class="u-s-p-b-60">
+    <!--====== Section Intro ======-->
+    <div class="section__intro u-s-m-b-30">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="section__text-wrap">
+              <h1 class="section__heading u-c-secondary">
+                Giỏ hàng
+              </h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--====== End - Section Intro ======-->
+
+    <!--====== Section Content ======-->
+    <div class="section__content" *ngIf="carts.length > 0">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 u-s-m-b-30">
+            <div class="table-responsive" [style]="{overflow: 'auto', height: carts.length > 2 ? '500px': 'auto'}">
+              <table class="table-p">
+                <tbody>
+                <!--====== Row ======-->
+                <tr *ngFor="let cart of carts" [class.low-opacity]="cart.productsDetail.quantity < cart.quantity">
+                  <td>
+                    <div class="table-p__box">
+                      <div class="table-p__img-wrap">
+                        <img
+                          class="u-img-fluid"
+                          [src]="cart.productsDetail.product.thumnail"
+                          alt=""
+                          style="height: 120px; object-fit: contain"
+                        />
+                      </div>
+                      <div class="table-p__info">
+                      <span class="table-p__name">
+                        <a [routerLink]="['/product-detail/', cart.productsDetail.product.id]">
+                          {{cart.productsDetail.product.name}}
+                        </a>
+                      </span>
+                        <span class="table-p__category">
+                        <a href="#">{{cart.productsDetail.product.category.name}}</a>
+                      </span>
+                        <ul class="table-p__variant-list">
+                          <li>
+                            <span>Kích thước: {{cart.productsDetail.size.code}}</span>
+                          </li>
+                          <li>
+                            <span>Màu sắc: {{cart.productsDetail.color.name}}</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                  <span
+                    class="table-p__price">{{cart.productsDetail.product.price | currency: 'VND' : 'symbol' : '4.0' }}</span>
+                  </td>
+                  <td>
+                    <div class="table-p__input-counter-wrap">
+                      <!--====== Input Counter ======-->
+                      <div class="input-counter">
+                        <input
+                          class="input-counter__text input-counter--text-primary-style"
+                          type="number"
+                          onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"
+                          [value]="cart.quantity"
+                          (change)="updateCart($event, cart.customer.id, cart.productsDetail.id, cart.productsDetail.quantity, cart.quantity, cart.id)"
+                          min="1"
+                          [max]="cart.productsDetail.quantity"/>
+                        <p class="text-danger" *ngIf="cart.productsDetail.quantity < cart.quantity">
+                          Còn {{cart.productsDetail.quantity}} sản phẩm</p>
+                      </div>
+                      <!--====== End - Input Counter ======-->
+                    </div>
+                  </td>
+                  <td>
+                  <span
+                    class="table-p__price">{{cart.productsDetail.product.price * cart.quantity | currency: 'VND' : 'symbol' : '4.0' }}</span>
+                  </td>
+                  <td>
+                    <div class="table-p__del-wrap">
+                      <a
+                        class="far fa-trash-alt table-p__delete-link"
+                        href="javascript:void(0)"
+                        (click)="onDelete(cart.id)"
+                      ></a>
+                    </div>
+                  </td>
+                </tr>
+                <!--====== End - Row ======-->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <div class="route-box">
+              <div class="route-box__g1">
+                <a class="route-box__link" routerLink="/products"
+                ><i class="fas fa-long-arrow-alt-left"></i>
+
+                  <span>Tiếp tục mua sắm</span></a
+                >
+              </div>
+              <div class="route-box__g2">
+                <a class="route-box__link" href="javascript:void(0)"
+                   (click)="onOpenDialogDeleteAll()">
+                  <i class="fas fa-trash"></i>
+                  <span>Xoá tất cả</span>
+                </a>
+
+<!--                <a class="route-box__link" href="#"-->
+<!--                ><i class="fas fa-sync"></i>-->
+
+<!--                  <span>Cập nhật giỏ hàng</span></a-->
+<!--                >-->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--====== End - Section Content ======-->
+    <div class="text-center" *ngIf="carts.length == 0">
+      <p>Giỏ hàng của bạn đang trống. Mời bạn mua thêm sản phẩm <b><a routerLink="/products"> tại đây.</a></b></p>
+    </div>
+  </div>
+  <!--====== End - Section 2 ======-->
+
+  <!--====== Section 3 ======-->
+  <div class="u-s-p-b-60">
+    <!--====== Section Content ======-->
+    <div class="section__content">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 u-s-m-b-30">
+            <form class="f-cart" [formGroup]="formGroup">
+              <div class="row">
+                <div class="col-lg-8 col-md-12 u-s-m-b-30">
+                  <div class="f-cart__pad-box">
+                    <!--====== Check Box ======-->
+                    <div class="check-box u-s-m-b-30">
+                      <input type="checkbox" [checked]="defaultInfoModel" (change)="defaultInfo($event)"
+                             id="get-address" name="default-info">
+                      <div class="check-box__state check-box__state--primary">
+
+                        <label class="check-box__label" for="get-address">
+                          Sử dụng thông tin mặc định ở tài khoản
+                        </label>
+                      </div>
+                    </div>
+                    <!--====== End - Check Box ======-->
+                    <h1 class="gl-h1">THÔNG TIN VẬN CHUYỂN</h1>
+                    <span class="gl-text u-s-m-b-30">Nhập thông tin địa chỉ mà bạn muốn gửi hàng</span>
+
+                    <div class="row">
+                      <div class="u-s-m-b-30 col-6">
+                        <!--======TỈNH / THÀNH PHỐ ======-->
+                        <label class="gl-label" for="shipping-country">TỈNH / THÀNH PHỐ *</label>
+                        <mat-select
+                          class="select-box select-box--primary-style"
+                          id="shipping-country"
+                          formControlName="province">
+                          <mat-option [value]="-1" [disabled]="true">Chọn tỉnh/thành phố</mat-option>
+                          <mat-option *ngFor="let p of provinces"
+                                      [value]="p.ProvinceID"
+                                      (click)="getDistrict(p.ProvinceID,p.ProvinceName); resetDistrictAndWard()">
+                            {{p.ProvinceName}}
+                          </mat-option>
+                        </mat-select>
+                        <!--====== TỈNH / THÀNH PHỐ ======-->
+                      </div>
+                      <div class="u-s-m-b-30 col-6">
+                        <!--====== QUẬN / HUYỆN  ======-->
+                        <label class="gl-label" for="shipping-state">QUẬN / HUYỆN *</label>
+                        <mat-select
+                          class="select-box select-box--primary-style"
+                          id="shipping-state"
+                          formControlName="district">
+                          <mat-option [value]="-1" [disabled]="true">Chọn quận/huyện</mat-option>
+                          <mat-option *ngFor="let d of districts"
+                                      [value]="d.DistrictID"
+                                      (click)="getWard(d.DistrictID, d.DistrictName); resetWard()">
+                            {{d.DistrictName}}
+                          </mat-option>
+                        </mat-select>
+                        <!--====== QUẬN / HUYỆN  ======-->
+                      </div>
+
+                    </div>
+                    <div class="row">
+                      <div class="u-s-m-b-30 col-6">
+                        <!--====== PHƯỜNG / XÃ * ======-->
+                        <label class="gl-label" for="shipping-state">PHƯỜNG / XÃ *</label>
+                        <mat-select
+                          class="select-box select-box--primary-style"
+                          formControlName="ward">
+                          <mat-option [value]="-1" [disabled]="true"> Chọn phường/xã</mat-option>
+                          <mat-option *ngFor="let w of wards"
+                                      [value]="w.WardCode"
+                                      (click)="getWardName(w.WardName)">
+                            {{w.WardName}}
+                          </mat-option>
+                        </mat-select>
+                        <!--======PHƯỜNG / XÃ * ======-->
+                      </div>
+                      <div class="u-s-m-b-30 col-6">
+                        <label for="customer-other-address" class="gl-label">SỐ NHÀ/THÔN, XÓM *</label>
+                        <input type="text" class="input-text input-text--primary-style" id="customer-other-address"
+                               formControlName="other">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="u-s-m-b-30 col-6">
+                        <label for="customer-name-order" class="gl-label">HỌ TÊN *</label>
+                        <input type="text" class="input-text input-text--primary-style" id="customer-name-order"
+                               formControlName="shipName">
+                      </div>
+                      <div class="u-s-m-b-30 col-6 ">
+                        <label for="customer-phone-order" class="gl-label">SĐT *</label>
+                        <input type="text" class="input-text input-text--primary-style" id="customer-phone-order"
+                               formControlName="shipPhone">
+                      </div>
+                    </div>
+
+                    <h1 class="gl-h1">GHI CHÚ</h1>
+                    <div>
+                      <label for="f-cart-note"></label
+                      ><textarea
+                      class="text-area text-area--primary-style"
+                      id="f-cart-note" style="height: 100px"
+                      formControlName="note"
+                    ></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-12 u-s-m-b-30">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="o-summary__section u-s-m-b-23">
+                        <div class="o-summary__box">
+                          <h1 class="checkout-f__h1">THANH TOÁN & VẬN CHUYỂN</h1>
+                          <div class="ship-b">
+
+                            <span class="ship-b__text">Gửi tới:</span>
+                            <div class="ship-b__box u-s-m-b-10">
+                              <p class="ship-b__p" *ngIf="address?.id">
+                                {{address?.fullname + ', ' + address?.phone}}
+                                <br>
+                                {{address?.wardName + ', ' + address?.districtName + ', ' + address?.provinceName}}
+                              </p>
+                              <p class="ship-b__p" *ngIf="!address?.id">
+                                Chọn địa chỉ mặc định
+                              </p>
+                              <a class="ship-b__edit btn--e-transparent-platinum-b-2 hover-link-black"
+                                 data-modal="modal"
+                                 data-modal-id="#edit-ship-address" (click)="openEditAddressDialog()">Chỉnh sửa</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="f-cart__pad-box">
+                        <div class="u-s-m-b-30">
+                          <table class="f-cart__table">
+                            <tbody>
+                            <tr>
+                              <td>Tiền ship</td>
+                              <td>{{shippingTotal | currency: 'VND' : 'symbol' : '4.0' }}</td>
+                            </tr>
+                            <tr>
+                              <td>Tiền hàng</td>
+                              <td>{{subTotal | currency: 'VND' : 'symbol' : '4.0' }}</td>
+                            </tr>
+                            <tr>
+                              <td>Tổng tiền</td>
+                              <td>{{subTotal + shippingTotal | currency: 'VND' : 'symbol' : '4.0' }}</td>
+                            </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div>
+                          <button class="btn-primary-custom btn-custom--smooth w-100" type="button"
+                                  (click)="checkOut()">
+                            Đặt hàng
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--====== End - Section Content ======-->
+  </div>
+  <!--====== End - Section 3 ======-->
+</ng-container>
+
+<ng-container *ngIf="carts.length == 0">
+  <div>
+    <!--====== Section 1 ======-->
+    <div class="u-s-p-y-60" style="padding-top: 13.75rem;padding-bottom: 22.75rem;">
+
+      <!--====== Section Content ======-->
+      <div class="section__content">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12 col-md-12 u-s-m-b-30">
+              <div class="empty">
+                <div class="empty__wrap">
+
+                  <span class="empty__big-text">GIỎ HÀNG TRỐNG</span>
+
+                  <span class="empty__text-1">Không tìm thấy sản phẩm nào trong giỏ hàng.</span>
+
+                  <a class="empty__redirect-link btn--e-brand hover-link" routerLink="/products">Tiếp tục mua sắm</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--====== End - Section Content ======-->
+    </div>
+    <!--====== End - Section 1 ======-->
+  </div>
+
+</ng-container>

@@ -1,0 +1,112 @@
+<div class="modal-content">
+  <div class="modal-body">
+    <div class="checkout-modal1">
+      <form class="checkout-modal1__form" [formGroup]="formGroup">
+        <div class="u-s-m-b-30">
+          <h1 class="gl-modal-h1">{{title}}</h1>
+        </div>
+        <div class="from-address">
+
+          <div class="u-s-m-b-30">
+            <!--======TỈNH / THÀNH PHỐ ======-->
+            <label class="gl-label" for="shipping-country">TỈNH / THÀNH PHỐ *</label>
+            <mat-select
+              class="select-box select-box--primary-style"
+              id="shipping-country"
+              formControlName="provinceId">
+              <mat-option [value]="-1" [disabled]="true">Chọn tỉnh/thành phố</mat-option>
+              <mat-option *ngFor="let p of provinces"
+                          [value]="p.ProvinceID"
+                          (onSelectionChange)="getDistrict(p.ProvinceID,p.ProvinceName);"
+                          (click)="getDistrict(p.ProvinceID,p.ProvinceName); resetDistrictAndWard()">
+                {{p.ProvinceName}}
+              </mat-option>
+            </mat-select>
+            <!--====== TỈNH / THÀNH PHỐ ======-->
+          </div>
+        </div>
+        <div class="from-address">
+          <div class="u-s-m-b-30">
+            <!--====== QUẬN / HUYỆN  ======-->
+            <label class="gl-label" for="shipping-state">QUẬN / HUYỆN *</label>
+            <mat-select
+              class="select-box select-box--primary-style"
+              id="shipping-state"
+              formControlName="districtId">
+              <mat-option [value]="-1" [disabled]="true">Chọn quận/huyện</mat-option>
+              <mat-option *ngFor="let d of districts"
+                          [value]="d.DistrictID"
+                          (onSelectionChange)="getWard(d.DistrictID, d.DistrictName)"
+                          (click)="getWard(d.DistrictID, d.DistrictName); resetWard()">
+                {{d.DistrictName}}
+              </mat-option>
+            </mat-select>
+            <!--====== QUẬN / HUYỆN  ======-->
+          </div>
+        </div>
+        <div class="from-address">
+          <div class="u-s-m-b-30">
+            <!--====== PHƯỜNG / XÃ * ======-->
+            <label class="gl-label" for="shipping-state">PHƯỜNG / XÃ *</label>
+            <mat-select
+              class="select-box select-box--primary-style"
+              formControlName="wardId">
+              <mat-option [value]="-1" [disabled]="true"> Chọn phường/xã</mat-option>
+              <mat-option *ngFor="let w of wards"
+                          [value]="w.WardCode"
+                          (click)="getWardName(w.WardName)">
+                {{w.WardName}}
+              </mat-option>
+            </mat-select>
+            <!--======PHƯỜNG / XÃ * ======-->
+          </div>
+        </div>
+        <div class="gl-inline">
+          <div class="u-s-m-b-30">
+            <label class="gl-label" for="address-other">SỐ NHÀ/THÔN, XÓM  *</label>
+            <input class="input-text input-text--primary-style" type="text" id="address-other" formControlName="other">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="u-s-m-b-30">
+              <label class="gl-label" for="address-fullname">TÊN NGƯỜI NHẬN </label>
+              <input class="input-text input-text--primary-style" type="text" id="address-fullname"
+                     formControlName="fullname">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="u-s-m-b-30">
+              <label class="gl-label" for="address-phone">SĐT </label>
+              <input class="input-text input-text--primary-style" type="text" id="address-phone"
+                     formControlName="phone">
+            </div>
+          </div>
+        </div>
+
+        <div class="check-box u-s-m-b-30"
+             *ngIf="matDataDialog.row"
+             matTooltip="Bạn không thể xoá Địa chỉ mặc định. Hãy đặt địa chỉ khác làm Địa chỉ mặc định của bạn nhé."
+             matTooltipPosition="right"
+             [matTooltipDisabled]="matDataDialog.row.status != 1">
+          <input type="checkbox"
+                 id="default-address" name="default-address"
+                 (click)="onClickDefaultAddress($event)"
+                 [checked]="matDataDialog.row.status == 1"
+                 [disabled]="matDataDialog.row.status == 1">
+          <div class="check-box__state check-box__state--primary">
+            <label class="check-box__label" for="default-address">
+              Đặt làm địa chỉ mặc định
+            </label>
+          </div>
+        </div>
+        <div class="gl-modal-btn-group d-flex justify-content-end">
+
+          <button class="btn-primary-custom btn-custom--smooth" type="button" (click)="onSave()">LƯU</button>
+
+          <button class="btn-grey-custom btn-custom--smooth" type="button" (click)="onClose()">HUỶ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

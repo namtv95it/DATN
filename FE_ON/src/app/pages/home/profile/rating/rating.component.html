@@ -1,0 +1,60 @@
+<div class="container-fluid">
+  <div class="row fs-5">
+     <div class="col-11">
+        FORM ĐÁNH GIÁ
+     </div>
+     <div class="col-1 d-flex flex-row-reverse align-items-center">
+       <i class="fas fa-times" (click)="onCancel()"></i>
+     </div>
+  </div>
+
+  <form class="row mt-4" [formGroup]="formRating">
+    <div class=" col-12 d-flex">
+       <span class="fs-4"> Đánh giá sao:</span>
+       <span class="mx-3">
+         <ngx-stars  [readonly]="false" [color]="'yellow'" [wholeStars]="true" [size]="2" [maxStars]="5" [initialStars]="5" (ratingOutput)="onRatingSet($event)"
+                     style="height: 30px !important; "  ></ngx-stars>
+       </span>
+    </div>
+    <div class="col-12">
+      <div
+        class="custom-dropzone w-100 m-0 mt-4"
+        ngx-dropzone
+        [accept]="'image/*'"
+        (change)="onSelect($event)"
+      >
+        <ngx-dropzone-label>
+          <div>
+            <h5>Có thể chọn ảnh để đánh giá</h5>
+          </div>
+        </ngx-dropzone-label>
+        <ngx-dropzone-image-preview
+          ngProjectAs="ngx-dropzone-preview"
+          *ngFor="let f of files"
+          [file]="f"
+          [removable]="true"
+          (removed)="onRemove(f)"
+        >
+        </ngx-dropzone-image-preview>
+      </div>
+    </div>
+
+    <div class="col-12 mt-4">
+       <textarea rows="7" formControlName="content" class="w-100"></textarea>
+       <mat-hint class="text-danger" *ngIf=" this.formRating?.get('content')?.hasError('required') && this.formRating?.get('content')?.touched">
+           Vui lòng nhập nội dung muốn đánh giá
+       </mat-hint>
+    </div>
+
+    <div class="col-12 mt-3">
+        <button class="btn btn-success d-flex align-items-center" (click)="onSave()" [disabled]="checkSprint" >
+          <span *ngIf="checkSprint" class="spinner-border fs-6" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </span>
+          <span class="mx-2">
+            Gửi đánh giá
+          </span>
+        </button>
+    </div>
+  </form>
+</div>

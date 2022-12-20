@@ -1,0 +1,59 @@
+.button-x {
+  top: -11px;
+  position: absolute;
+  font-size: 29px;
+  right: 0px;
+  cursor: pointer;
+}
+
+.product-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%
+}
+
+td, th {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+.loading {
+  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+}
+
+.spinner-center {
+  top: 50%;
+  left: 50%;
+  position: absolute;
+}
+
+::ng-deep .mat-checkbox .mat-checkbox-frame {
+}
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-background {
+  background-color: #ff4500 !important;
+}
+
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background {
+  border-color: #ff4500 !important;
+  background-color: #ff4500 !important;
+}
+
+::ng-deep mat-checkbox .mat-checkbox-checkmark-path {
+  stroke: white !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-selected {
+  background-color: #ff4500;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-state-done {
+  background-color: #ff4500;
+  color: #fff;
+}

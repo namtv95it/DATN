@@ -1,0 +1,10 @@
+.header--style-1{
+   position: fixed ;
+   top: 0;
+   width: 100%;
+   z-index: 5;
+}
+
+.app-content{
+   margin-top: 158px;
+}

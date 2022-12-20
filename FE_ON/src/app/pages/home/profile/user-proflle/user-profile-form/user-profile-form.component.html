@@ -1,0 +1,63 @@
+<div class="customer-form-title card-title">
+  <h6 class="main-content-label text-center" style="font-size: 16px;">Chỉnh sửa thông tin</h6>
+  <!--    <span class="fa-solid fa-xmark icon-close" style="font-size: 16px; cursor: pointer; float: right"-->
+  <!--          (click)="onDismiss()"></span>-->
+</div>
+<div class="card-body">
+  <form class="mb-0">
+    <div class="row" [formGroup]="formGroup">
+      <div class="col">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Tên khách hàng</mat-label>
+          <input type="text" matInput cdkFocusInitial formControlName="fullname">
+          <mat-error class="text-danger"
+                     *ngIf="formGroup.get('fullname')?.hasError('required') &&
+                                      formGroup.get('fullname')?.touched">
+            Tên khách hàng không được để trống
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Email</mat-label>
+          <input type="text" matInput formControlName="email">
+          <mat-error class="text-danger"
+                     *ngIf="formGroup.get('email')?.hasError('required') &&
+                                      formGroup.get('email')?.touched">
+            Email không được để trống
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>SĐT</mat-label>
+          <input type="text" matInput formControlName="phone">
+          <mat-error class="text-danger"
+                     *ngIf="formGroup.get('phone')?.hasError('required') &&
+                                      formGroup.get('phone')?.touched">
+            Số điện thoại không được để trống
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Ngày sinh</mat-label>
+          <input matInput
+                 formControlName="birthDate" type="date">
+          <mat-error class="text-danger"
+                     *ngIf="formGroup.get('birthDate')?.hasError('required') &&
+                                  formGroup.get('birthDate')?.touched">
+            Ngày sinh không được để trống
+          </mat-error>
+        </mat-form-field>
+        <div class="action-button mt-3 d-flex justify-content-end gap-2">
+          <button type="button" mat-raised-button color="warn" class="mr-3" (click)="onDismiss()">
+            <span><span class="fe fe-x mg-r-2"></span>Đóng</span>
+          </button>
+          <button type="button"
+                  mat-raised-button color="primary"
+                  (click)="save()">
+            Lưu
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

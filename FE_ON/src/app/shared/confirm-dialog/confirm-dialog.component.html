@@ -1,0 +1,15 @@
+<div class="d-flex justify-content-between">
+    <h6 class="main-content-label" style="font-size: 16px;">{{ title }}</h6>
+    <span class="fa-solid fa-xmark icon-close" style="font-size: 16px; cursor: pointer;" (click)="onDismiss()"></span>
+</div>
+
+<label class="mt-3 fs-5 text-center">{{message}}</label>
+<div class="text-center mt-3">
+    <button class="btn-primary-custom btn-custom--smooth me-4 ms-4" (click)="onConfirm()">
+        <span>Xác nhận</span>
+    </button>
+    <button class="btn-grey-custom btn-custom--smooth" (click)="onDismiss()">
+        <span><span class="fa-solid fa-xmark"></span> Đóng</span>
+    </button>
+</div>
+

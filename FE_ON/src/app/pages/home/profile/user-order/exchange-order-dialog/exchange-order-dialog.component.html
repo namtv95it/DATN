@@ -1,0 +1,247 @@
+<div class="content" style="position: relative">
+<span mat-dialog-title class="text-center h2 font-weight-bold">
+  {{dataDialog.checkExchange === 1 ? 'Chi tiết đơn trả' : 'Trả hàng'}}
+</span>
+  <span mat-dialog-title mat-dialog-close class="text-center h2 font-weight-bold button-x">
+  x
+</span>
+  <ng-container *ngIf="dataDialog.checkExchange === 1">
+    <div class="card-body" style="margin-bottom: 35px;">
+      <table mat-table [dataSource]="dataSourceExchange"
+             class="w-100 table-hover">
+
+        <ng-container matColumnDef="stt">
+          <th mat-header-cell *matHeaderCellDef> STT</th>
+          <td mat-cell *matCellDef="let row; index as ind">{{ind + 1}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="productImage">
+          <th mat-header-cell *matHeaderCellDef> Ảnh</th>
+          <td mat-cell *matCellDef="let row">
+            <img [src]="row.productsDetail.product.thumnail" class="product-image">
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="productName">
+          <th mat-header-cell *matHeaderCellDef> Tên sản phẩm</th>
+          <td mat-cell *matCellDef="let row">{{row.productsDetail.product.name}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="color">
+          <th mat-header-cell *matHeaderCellDef> Màu sắc</th>
+          <td mat-cell *matCellDef="let row">
+            <label class="product-image" [style.background-color]="row.productsDetail.color.code">
+            </label>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="size">
+          <th mat-header-cell *matHeaderCellDef> Kích thước</th>
+          <td mat-cell *matCellDef="let row">{{row.productsDetail.size.code}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef> Số lượng hoàn trả</th>
+          <td mat-cell *matCellDef="let row">{{row.quantity}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef> Trạng thái</th>
+          <td mat-cell *matCellDef="let row">
+            <ng-container [ngSwitch]="row.status">
+              <ng-template class="text-primary" [ngSwitchCase]="TYPE_EXCHANGE.CHO_XAC_NHAN">
+                <span class="text-warning">Chờ xác nhận</span>
+              </ng-template>
+              <ng-template [ngSwitchCase]="TYPE_EXCHANGE.DONG_Y_TRA">
+                <span class="text-success">Đồng ý trả</span>
+              </ng-template>
+              <ng-template [ngSwitchCase]="TYPE_EXCHANGE.HUY_TRA">
+                <span class="text-danger">Huỷ trả</span>
+              </ng-template>
+              <ng-template [ngSwitchCase]="TYPE_EXCHANGE.NHAN_HANG">
+                <span class="text-primary">Nhận hàng</span>
+              </ng-template>
+            </ng-container>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsExchange"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsExchange;"></tr>
+      </table>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="dataDialog.checkExchange === 0">
+    <div *ngIf="isLoading" class="loading">
+      <div
+        class="spinner-border text-danger spinner-center"
+        role="status"
+      >
+      </div>
+    </div>
+
+
+    <div mat-dialog-content class="scroll-order-detail">
+
+      <!-- Code ở đây -->
+      <div class="card-body">
+        <mat-stepper #stepper [linear]="true">
+          <mat-step [completed]="selection.selected.length > 0 && isValidQuantity()" (change)="isValidQuantity()">
+            <ng-template matStepLabel>Chọn sản phẩm</ng-template>
+            <table mat-table [dataSource]="dataSource"
+                   class="w-100 table-hover">
+
+              <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef style="width: 5%;">
+                  <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                                [checked]="selection.hasValue() && isAllSelected()"
+                                [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                [aria-label]="checkboxLabel()">
+                  </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row; index as index" style="width: 5%;">
+                  <mat-checkbox (click)="$event.stopPropagation()"
+                                (change)="$event ? selection.toggle(row) : null; selectRow(row)"
+                                [checked]="selection.isSelected(row)"
+                                [aria-label]="checkboxLabel(row)">
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="stt">
+                <th mat-header-cell *matHeaderCellDef> STT</th>
+                <td mat-cell *matCellDef="let row; index as ind">{{ind + 1}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="productImage">
+                <th mat-header-cell *matHeaderCellDef> Ảnh</th>
+                <td mat-cell *matCellDef="let row">
+                  <img [src]="row.productsDetail.product.thumnail" class="product-image">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="productName">
+                <th mat-header-cell *matHeaderCellDef> Tên sản phẩm</th>
+                <td mat-cell *matCellDef="let row">{{row.productsDetail.product.name}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="color">
+                <th mat-header-cell *matHeaderCellDef> Màu sắc</th>
+                <td mat-cell *matCellDef="let row">
+                  <label class="product-image" [style.background-color]="row.productsDetail.color.code">
+                  </label>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="size">
+                <th mat-header-cell *matHeaderCellDef> Kích thước</th>
+                <td mat-cell *matCellDef="let row">{{row.productsDetail.size.code}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="quantityOld">
+                <th mat-header-cell *matHeaderCellDef> Số lượng cũ</th>
+                <td mat-cell *matCellDef="let row">{{row.quantity}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="quantity">
+                <th mat-header-cell *matHeaderCellDef> Số lượng hoàn trả</th>
+                <td mat-cell *matCellDef="let row; index as i">
+                  <input matInput type="text"
+                         numberOnly
+                         [minValue]="1"
+                         [maxValue]="row.quantity"
+                         style="width: 65px"
+                         [value]="isDisabled(row) ? '0' : '0 '"
+                         (keyup)="setQuantity($event, i, row)"
+                         [disabled]="!isDisabled(row)">
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <div mat-dialog-actions align="end">
+              <button
+                [class]="selection.selected.length == 0 ? 'btn-grey-custom btn-custom--smooth' : 'btn-primary-custom btn-custom--smooth'"
+                [disabled]="selection.selected.length == 0"
+                (click)="onChooseProduct(stepper)">Tiếp tục
+              </button>
+            </div>
+          </mat-step>
+          <mat-step [completed]="fileUploadVideo.length > 0 && fileUploadImage.length > 0 && reason.trim() !== ''">
+            <ng-template matStepLabel>Lý do hoàn trả</ng-template>
+            <div class="row">
+              <div class="col-6">
+                <ngx-dropzone
+                  class="custom-dropzone"
+                  ngx-dropzone
+                  [accept]="'image/*'"
+                  (change)="onUploadImage($event)"
+                  [multiple]="true">
+                  <ngx-dropzone-label>
+                    <div>
+                      <h5>Hình ảnh</h5>
+                    </div>
+                  </ngx-dropzone-label>
+                  <ngx-dropzone-image-preview
+                    ngProjectAs="ngx-dropzone-preview"
+                    *ngFor="let f of fileUploadImage"
+                    [file]="f"
+                    [removable]="true"
+                    (removed)="onRemoveImage(f)">
+                  </ngx-dropzone-image-preview>
+                </ngx-dropzone>
+              </div>
+              <div class="col-6">
+                <ngx-dropzone
+                  class="custom-dropzone"
+                  ngx-dropzone
+                  [accept]="'video/*'"
+                  (change)="onUploadVideo($event)"
+                  [multiple]="false">
+                  <ngx-dropzone-label>
+                    <div>
+                      <h5>Video</h5>
+                    </div>
+                  </ngx-dropzone-label>
+                  <ngx-dropzone-image-preview
+                    ngProjectAs="ngx-dropzone-preview"
+                    *ngFor="let f of fileUploadVideo"
+                    [file]="f"
+                    [removable]="true"
+                    (removed)="onRemoveVideo(f)">
+                  </ngx-dropzone-image-preview>
+                </ngx-dropzone>
+              </div>
+            </div>
+            <textarea class="text-area text-area--primary-style"
+                      style="margin-top: 15px; width: 100%"
+                      rows="8"
+                      placeholder="Lý do trả hàng."
+                      [(ngModel)]="reason">
+          </textarea>
+            <div mat-dialog-actions align="end">
+              <button class="btn-grey-custom btn-custom--smooth" style="margin-right: 15px" matStepperPrevious>Trở lại
+              </button>
+              <button class="btn-primary-custom btn-custom--smooth" (click)="onChooseReason(stepper)">Tiếp tục</button>
+            </div>
+          </mat-step>
+          <mat-step>
+            <ng-template matStepLabel>Xác nhận thông tin hoàn trả</ng-template>
+            <ng-container *ngFor="let d of dataExchange">
+              <p>{{'-Sản phẩm: ' + d.productName + ', ' + 'Màu sắc: ' + d.color + ', ' + 'Kích thước: ' + d.size + ', ' + 'Số lượng hoàn trả: ' + d.quantity}}</p>
+            </ng-container>
+            <p>{{'-Lý do hoàn trả: ' + reason}}</p>
+            <div mat-dialog-actions align="end">
+              <button class="btn-grey-custom btn-custom--smooth" matStepperPrevious>Trở lại</button>
+              <button class="btn-primary-custom btn-custom--smooth" style="margin-right: 15px"
+                      (click)="onConfirm()">Xác nhận
+              </button>
+            </div>
+          </mat-step>
+        </mat-stepper>
+      </div>
+      <!-- Dừng ở đây -->
+    </div>
+  </ng-container>
+</div>

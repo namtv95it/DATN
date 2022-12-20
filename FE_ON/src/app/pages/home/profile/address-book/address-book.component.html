@@ -1,0 +1,45 @@
+<div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+  <div class="dash__pad-2">
+    <div class="dash__address-header">
+      <h1 class="dash__h1">Địa chỉ giao hàng</h1>
+      </div>
+    </div>
+  </div>
+  <div class="dash__box dash__box--shadow dash__box--bg-white dash__box--radius u-s-m-b-30">
+    <div class="dash__table-2-wrap gl-scroll">
+      <table class="dash__table-2">
+        <thead>
+        <tr>
+          <th>Hoạt động</th>
+          <th>Họ tên</th>
+          <th>Địa chỉ</th>
+          <th>Số điện thoại</th>
+          <th>Khác</th>
+          <th>Trạng thái</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let a of addressInCustomer">
+          <td>
+            <a style="margin-right: 15px" class="fas fa-edit table-p__delete-link p-0"
+               (click)="openForm(TYPE_DIALOG.UPDATE, a)"></a>
+            <a class="far fa-trash-alt table-p__delete-link p-0" (click)="onDelete(a.id, a.status)"></a>
+          </td>
+          <td>{{a.fullname}}</td>
+          <td>{{a.wardName + ', ' + a.districtName + ', ' + a.provinceName}}</td>
+          <td>{{a.phone}}</td>
+          <td>{{a.other == null ? 'Trống' : a.other}}</td>
+          <td>
+            <div class="gl-text">{{a.status == 1 ? 'Địa chỉ mặc định' : ''}}</div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div>
+    <a class="dash__custom-link btn--e-brand-b-2 hover-link" (click)="openForm(TYPE_DIALOG.NEW)">
+      <i class="fas fa-plus u-s-m-r-8"></i>
+      <span>Thêm mới địa chỉ</span>
+    </a>
+  </div>

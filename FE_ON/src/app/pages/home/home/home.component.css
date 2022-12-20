@@ -1,0 +1,9 @@
+.carousel-indicators [data-bs-target]{
+  width: 15px;
+  height: 15px;
+}
+
+.product-o__action-wrap{
+  top: 40% ;
+}
+

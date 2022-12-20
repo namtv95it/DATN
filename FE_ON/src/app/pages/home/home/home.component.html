@@ -1,0 +1,292 @@
+<!--====== Primary Slider ======-->
+<div id="carouselExampleDark" class="carousel carousel-dark slide mb-4" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true"
+            aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="3" aria-label="Slide 4"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active" data-bs-interval="5000">
+      <img src="https://res.cloudinary.com/dpnmnhu1m/image/upload/v1671354753/ms_banner_img2_us6prh.jpg" class="d-block w-100"
+           alt="...">
+    </div>
+    <div class="carousel-item" data-bs-interval="5000">
+      <img src="https://theme.hstatic.net/200000182297/1000887316/14/ms_banner_img1.jpg?v=245" class="d-block w-100"
+           alt="...">
+    </div>
+    <div class="carousel-item" data-bs-interval="5000">
+      <img src="https://theme.hstatic.net/200000182297/1000887316/14/ms_banner_img2.jpg?v=245" class="d-block w-100"
+           alt="...">
+    </div>
+    <div class="carousel-item" data-bs-interval="5000">
+      <img src="https://theme.hstatic.net/200000182297/1000887316/14/ms_banner_img1.jpg?v=254" class="d-block w-100"
+           alt="...">
+    </div>
+  </div>
+  <button class="carousel-control-prev " type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon bg-dark" aria-hidden="true" style="margin-right: 100px ;"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+    <span class="carousel-control-next-icon bg-dark" aria-hidden="true" style="margin-left: 100px ;"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+<!--====== End - Primary Slider ======-->
+
+<!--====== Section 2 ======-->
+<div class="u-s-p-b-60 p-0">
+  <!--====== Section Content ======-->
+  <div class="section__content">
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="section__text-wrap">
+            <h1 class="section__heading u-c-secondary u-s-m-b-12">
+              SẢN PHẨM BÁN CHẠY
+            </h1>
+            <!-- <span class="section__span u-c-silver"
+            >CHOOSE CATEGORY</span> -->
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="filter__grid-wrapper u-s-m-t-30">
+            <div class="row">
+              <ngx-slick-carousel class="carousel p-0" #slickModal="slick-carousel" [config]="slideConfig"
+                                  (init)="slickInit($event)" (breakpoint)="breakpoint($event)"
+                                  (afterChange)="afterChange($event)"
+                                  (beforeChange)="beforeChange($event)">
+                <div ngxSlickItem *ngFor="let pro of listPro "
+                     class="slide col-12">
+                  <div class="product-o product-o--hover-on product-o--radius">
+                    <a [routerLink]="['/product-detail/', pro.id]">
+                      <div class="product-o__wrap">
+                        <a class="aspect aspect--bg-grey aspect--square u-d-block">
+                          <img class="aspect__img" src="{{pro.thumnail}}" alt=""/>
+                        </a>
+                      </div>
+                    </a>
+                    <div class="product-o__action-wrap">
+                      <ul class="product-o__action-list text-white">
+                        <li>
+                          <a
+                            (click)="OpenProductView(pro)"
+                            data-modal="modal"
+                            data-modal-id="#quick-look"
+                            data-tooltip="tooltip"
+                            data-placement="top"
+                            title="xem nhanh"
+                          ><i class="fas fa-search-plus"></i
+                          ></a>
+                        </li>
+                        <li>
+                          <a
+                            data-modal="modal"
+                            data-modal-id="#add-to-cart"
+                            data-tooltip="tooltip"
+                            data-placement="top"
+                            title="Add to Cart"
+                          ><i class="fas fa-plus-circle"></i
+                          ></a>
+                        </li>
+                      </ul>
+                    </div>
+                    <span class="product-o__name">
+                      <a [routerLink]="['/product-detail/', pro.id]">{{pro.name}}</a>
+                    </span>
+                    <app-stars [rating]="takeRatingPro(pro.id)"></app-stars>
+                    <span class="product-o__price">{{pro.price | currency:'VND':'symbol':'4.0' }}
+                    </span>
+                  </div>
+                </div>
+              </ngx-slick-carousel>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--====== End - Section Content ======-->
+</div>
+<!--====== End - Section 2 ======-->
+
+
+<div class="u-s-p-b-60">
+  <!--====== Section Content ======-->
+  <div class="section__content mt-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="section__text-wrap">
+            <h1 class="section__heading u-c-secondary u-s-m-b-12">
+              SẢN PHẨM MỚI
+            </h1>
+              <!-- <span class="section__span u-c-silver"
+              >CHOOSE CATEGORY</span> -->
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="filter__grid-wrapper u-s-m-t-30">
+            <div class="row">
+              <ngx-slick-carousel class="carousel p-0" #slickModal="slick-carousel" [config]="slideConfig"
+                                  (init)="slickInit($event)" (breakpoint)="breakpoint($event)"
+                                  (afterChange)="afterChange($event)"
+                                  (beforeChange)="beforeChange($event)">
+
+                <div ngxSlickItem *ngFor="let pro of listNewPro " class="slide col-12">
+                  <div class="product-o product-o--hover-on product-o--radius">
+                    <a [routerLink]="['/product-detail/', pro.id]">
+                      <div class="product-o__wrap">
+                        <a class="aspect aspect--bg-grey aspect--square u-d-block">
+                          <img class="aspect__img" src="{{pro.thumnail}}" alt=""/>
+                        </a>
+                      </div>
+                    </a>
+                    <div class="product-o__action-wrap">
+                      <ul class="product-o__action-list text-white">
+                        <li>
+                          <a
+                            data-modal="modal"
+                            data-modal-id="#quick-look"
+                            data-tooltip="tooltip"
+                            data-placement="top"
+                            title="Quick View"
+                            (click)="OpenProductView( pro  )"
+                          ><i class="fas fa-search-plus"></i
+                          ></a>
+                        </li>
+                        <li>
+                          <a
+                            data-modal="modal"
+                            data-modal-id="#add-to-cart"
+                            data-tooltip="tooltip"
+                            data-placement="top"
+                            title="Add to Cart"
+                          ><i class="fas fa-plus-circle"></i
+                          ></a>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <!-- <span class="product-o__category">
+                      <a href="#">Electronics</a>
+                    </span> -->
+
+                    <span class="product-o__name">
+                      <a [routerLink]="['/product-detail/', pro.id]">{{pro.name}}</a>
+                    </span>
+                    <app-stars [rating]="takeRatingPro(pro.id)"></app-stars>
+                    <span class="product-o__price">{{pro.price | currency:'VND':'symbol':'4.0' }}
+                    </span>
+                  </div>
+                </div>
+
+              </ngx-slick-carousel>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--====== End - Section Content ======-->
+</div>
+
+<img src="https://res.cloudinary.com/dpnmnhu1m/image/upload/v1671355052/hb_image1_lqrc4k.jpg" class="d-block w-100"
+     alt="...">
+
+<!--====== blog ======-->
+<div class="u-s-p-b-60 mt-5">
+  <!--====== Section Intro ======-->
+  <div class="section__intro u-s-m-b-46">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="section__text-wrap">
+            <h1 class="section__heading u-c-secondary u-s-m-b-12">
+              NEM'S BLOG
+            </h1>
+            <span class="section__span u-c-silver">ĐÓN ĐẦU XU HƯỚNG, ĐỊNH HÌNH PHONG CÁCH</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--====== End - Section Intro ======-->
+
+  <!--====== Section Content ======-->
+  <div class="section__content">
+    <div class="container">
+      <div class="row ">
+        <div class="col-lg-4 col-md-6 u-s-m-b-30">
+          <div class="bp-mini bp-mini--img u-h-100">
+            <div class="bp-mini__thumbnail">
+              <!--====== Image Code ======-->
+              <a class="aspect-blog aspect--bg-grey aspect--1366-768 u-d-block" href="#">
+                <img
+                  class="aspect__img"
+                  src="https://res.cloudinary.com/dpnmnhu1m/image/upload/v1671288894/315854475_2623148267823058_3203710229884569157_n_3baa02b3ee4348339faec98be869be0d_large_umgut5.jpg"
+                  alt=""
+                /></a>
+              <!--====== End - Image Code ======-->
+            </div>
+            <div class="bp-mini__content">
+                <span class="bp-mini__h1">
+                  <a href="#">KHAM PHÁ 4 HỌA TIẾT ĐANG THỐNG LĨNH NĂM 2022</a>
+                </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 u-s-m-b-30">
+          <div class="bp-mini bp-mini--img u-h-100">
+            <div class="bp-mini__thumbnail">
+              <!--====== Image Code ======-->
+              <a class="aspect-blog aspect--bg-grey aspect--1366-768 u-d-block" href="#">
+                <img
+                  class="aspect__img"
+                  src="https://res.cloudinary.com/dpnmnhu1m/image/upload/v1671289143/web_6fb6ad7b835f456aba636f2a29c0eaf8_large_ntepuu.jpg"
+                  alt=""
+                /></a>
+              <!--====== End - Image Code ======-->
+            </div>
+            <div class="bp-mini__content">
+                <span class="bp-mini__h1">
+                        <a href="#"
+                        >KHÁM PHÁ 4 HỌA TIẾT THỐNG LĨNH MÙA HÈ 2022</a
+                        ></span
+                >
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 u-s-m-b-30">
+          <div class="bp-mini bp-mini--img u-h-100">
+            <div class="bp-mini__thumbnail">
+              <!--====== Image Code ======-->
+              <a class="aspect-blog aspect--bg-grey aspect--1366-768 u-d-block" href="#">
+                <img
+                  class="aspect__img"
+                  src="https://res.cloudinary.com/dpnmnhu1m/image/upload/v1671289116/285634743_2457803104357576_4449744498852558662_n_a415bf75ede64fc997cbc67f348f8153_large_pepcdj.jpg"
+                  alt=""
+                /></a>
+              <!--====== End - Image Code ======-->
+            </div>
+            <div class="bp-mini__content">
+                <span class="bp-mini__h1">
+                        <a href="#"
+                        >RẠNG RỠ ĐÓN HÈ CÙNG VÁY HOA</a
+                        ></span
+                >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--====== End - Section Content ======-->
+</div>
+<!--====== End - Section 10 ======-->

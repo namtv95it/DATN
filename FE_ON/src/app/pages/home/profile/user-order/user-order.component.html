@@ -1,0 +1,115 @@
+<div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+  <div class="dash__pad-2">
+    <h1 class="dash__h1 u-s-m-b-14">Đơn hàng của bạn</h1>
+    <div class="m-order__list">
+      <mat-tab-group>
+        <mat-tab label="Tất cả">
+          <div class="mt-5"></div>
+          <div class="m-order__get border-1" *ngFor=" let order of listOrder ">
+            <div class="manage-o__header u-s-m-b-30">
+              <div class="dash-l-r">
+                <div>
+                  <div class="manage-o__text-2 u-c-secondary">Mã đơn: #{{order.id}}</div>
+                  <div class="manage-o__text u-c-silver">Ngày đặt hàng: {{order.createDate | date: 'dd-MM-yyyy'}}</div>
+                </div>
+                <div>
+                  <div class="dash__link dash__link--brand">
+                    <a *ngIf="order.status == 0">Chờ xác nhận</a>
+                    <a *ngIf="order.status == 1">Đã xác nhận</a>
+                    <a *ngIf="order.status == 2">Đang giao</a>
+                    <a *ngIf="order.status == 3">Đã giao</a>
+                    <a *ngIf="order.status == 4">Đã hủy</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span *ngFor="let od of listOrderDetail">
+              <div class="manage-o__description mt-3"  *ngIf="od.order.id == order.id" >
+              <div class="description__container">
+                <div class="description__img-wrap">
+                  <img class="img-fluid" style="height: 150px;" src="{{od.productsDetail.product.thumnail}}" alt=""></div>
+                <div class="description-title">
+                  <div class="fs-4">{{od.productsDetail.product.name}}</div>
+                  <div>Màu sắc: <span class="fw-normal"> {{od.productsDetail.color.name}}</span>  </div>
+                  <div>Kích cỡ: <span class="fw-normal"> {{od.productsDetail.size.code}} </span> </div>
+                </div>
+              </div>
+              <div class="description__info-wrap">
+                <div class="description-title">
+                  <div class="mt-4">Số lượng: <span class="fw-normal"> {{od.quantity}} </span> </div>
+                  <div>Đơn giá: <span class="fw-normal"> {{od.unitprice | currency: ' ' : 'symbol-narrow' : '.0-0' }} đ</span> </div>
+                </div>
+              </div>
+            </div>
+            </span>
+            <div class="d-flex flex-row-reverse">
+              <!-- <button  *ngIf="order.status == 3" class="btn btn-danger text-light mx-2">Trả hàng</button> -->
+              <div>
+                Tổng tiền: <span class="fs-4 text-danger">{{order.total | currency: ' ' : 'symbol-narrow' : '.0-0'}} đ</span>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="{{x.name}}" *ngFor=" let x of listStatus ">
+          <div class="mt-5"></div>
+          <div *ngFor=" let order of listOrder">
+            <div class="m-order__get border-1 mt-5" *ngIf=" order.status == x.status">
+              <div class="manage-o__header u-s-m-b-30">
+                <div class="dash-l-r">
+                  <div>
+                    <div class="manage-o__text-2 u-c-secondary">Mã đơn #{{order.id}}</div>
+                    <div class="manage-o__text u-c-silver">Ngày tạo đơn {{order.createDate | date: 'dd-MM-yyyy'}}</div>
+                  </div>
+                  <div>
+                    <div class="dash__link dash__link--brand">
+                      <a *ngIf="order.status == 0">Chờ xác nhận</a>
+                      <a *ngIf="order.status == 1">Đã xác nhận</a>
+                      <a *ngIf="order.status == 2">Đang giao</a>
+                      <a *ngIf="order.status == 3">Đã giao</a>
+                      <a *ngIf="order.status == 4">Đã hủy</a>
+                      <span class="ms-3" *ngIf=" order.status == 0" >
+                          <button class="btn btn-danger" (click)="openCancel(order.id)">Hủy</button>
+                      </span>
+                      <span class="ms-3" *ngIf=" order.status == 3" >
+                        <button class="btn btn-danger" *ngIf="order.checkExchange === 0 && checkDay(order.createDate, 7)" (click)="openExchange(order,order.checkExchange)">Trả hàng</button>
+                        <button class="btn btn-success" *ngIf="order.checkExchange === 1" (click)="openExchange(order, order.checkExchange)">Chi tiết đơn trả</button>
+                    </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span *ngFor="let od of listOrderDetail">
+              <div class="manage-o__description mt-3"  *ngIf="od.order.id == order.id" >
+              <div class="description__container">
+                <div class="description__img-wrap">
+                  <img class="img-fluid" style="height: 150px;" src="{{od.productsDetail.product.thumnail}}" alt=""></div>
+                <div class="description-title">
+                  <div class="fs-4">{{od.productsDetail.product.name}}</div>
+                  <div>Màu sắc: <span class="fw-normal"> {{od.productsDetail.color.name}}</span>  </div>
+                  <div>Kích cỡ: <span class="fw-normal"> {{od.productsDetail.size.code}} </span> </div>
+                </div>
+              </div>
+              <div class="description__info-wrap">
+                <div class="description-title">
+                  <div *ngIf="checkDate(order.createDate) && order.status == 3 && checkRating(order.id , od.productsDetail.product.id )">
+                      <span class="btn btn-outline-info" (click)="OnpenRating(order.id , od.productsDetail.product.id) ">Đánh giá sao</span>
+                  </div>
+                  <div class="mt-4">Số lượng: <span class="fw-normal"> {{od.quantity}} </span> </div>
+                  <div>Đơn giá: <span class="fw-normal"> {{od.unitprice | currency: ' ' : 'symbol-narrow' : '.0-0' }} đ</span> </div>
+                </div>
+              </div>
+            </div>
+            </span>
+              <div class="d-flex flex-row-reverse">
+                <!-- <button  *ngIf="order.status == 3" class="btn btn-danger text-light mx-2">Trả hàng</button> -->
+                <div>
+                  Tổng tiền: <span class="fs-4 text-danger">{{order.total | currency: ' ' : 'symbol-narrow' : '.0-0'}} đ</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

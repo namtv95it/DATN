@@ -1,0 +1,70 @@
+<div class="modal-content">
+  <div class="modal-body">
+    <div class="checkout-modal2">
+      <div class="u-s-m-b-30">
+        <div class="dash-l-r">
+          <h1 class="gl-modal-h1">Địa chỉ giao hàng</h1>
+          <div class="dash__link dash__link--brand">
+
+            <a class="btn btn-light" (click)="openAddNewAddress(TYPE_DIALOG.NEW)">Thêm mới địa chỉ</a></div>
+        </div>
+      </div>
+      <div class="row" *ngIf="addressInCustomer.length == 0">
+        <div class="col">
+          <h4 class="text-center">Danh sách địa chỉ trống !</h4>
+        </div>
+      </div>
+      <form class="checkout-modal2__form" #f="ngForm" >
+        <div class="dash__table-2-wrap u-s-m-b-30 gl-scroll">
+          <table class="dash__table-2" *ngIf="addressInCustomer.length > 0">
+            <thead>
+            <tr>
+              <th>Chọn</th>
+              <th>Họ tên</th>
+              <th>Địa chỉ</th>
+              <th>SĐT</th>
+              <th>Khác</th>
+              <th>Hành động</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr *ngFor="let a of addressInCustomer">
+              <td>
+                <!--====== Radio Box ======-->
+                <div class="radio-box">
+                  <input type="radio" id="address{{a?.id}}" name="checkedRadio" [value]="a?.id"
+                         [checked]="a?.id == dataDialog?.id || a?.id == idAddress"
+                         (click)="onClickRadio(a.id)">
+                  <div class="radio-box__state radio-box__state--primary">
+                    <label class="radio-box__label" for="address{{a.id}}"></label></div>
+                </div>
+                <!--====== End - Radio Box ======-->
+              </td>
+              <td>{{a.fullname}}</td>
+              <td>{{a.wardName + ', ' + a.districtName + ', ' + a.provinceName}}</td>
+              <td>{{a.phone}}</td>
+              <td>{{a.other == null ? 'Trống' : a.other}}</td>
+              <td>
+                <a style="margin-right: 15px" class="fas fa-edit table-p__delete-link p-0"
+                   (click)="openAddNewAddress(TYPE_DIALOG.UPDATE, a)"></a>
+                <a class="far fa-trash-alt table-p__delete-link p-0" (click)="onDelete(a.id, a.status)"></a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="gl-modal-btn-group d-flex justify-content-end">
+          <button class="btn-primary-custom btn-custom--smooth" type="button"
+                  (click)="onSaveAddress()" *ngIf="addressInCustomer.length > 0">
+            LƯU
+          </button>
+          <button class="btn-grey-custom btn-custom--smooth" type="button"
+                  (click)="onClose()">
+            ĐÓNG
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

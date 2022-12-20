@@ -1,0 +1,11 @@
+.m-order__get{
+  border: 3px solid #EEEEEE;
+}
+
+.description__img-wrap{
+   height: auto !important;
+}
+
+.description__img-wrap img{
+   border-radius: 0px !important;
+}

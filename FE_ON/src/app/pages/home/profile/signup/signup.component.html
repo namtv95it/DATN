@@ -1,0 +1,121 @@
+<!--====== Section 1 ======-->
+<div class="u-s-p-y-60">
+  <!--====== Section Content ======-->
+  <div class="section__content">
+    <div class="container">
+      <div class="breadcrumb row">
+        <div class="breadcrumb__wrap">
+          <ul class="breadcrumb__list">
+            <li class="has-separator">
+
+              <a routerLink="/home">Trang chủ</a></li>
+            <li class="is-marked">
+
+              <a routerLink="/sign-up">Đăng ký</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--====== End - Section 1 ======-->
+
+
+<!--====== Section 2 ======-->
+<div class="u-s-p-b-60">
+
+  <!--====== Section Intro ======-->
+  <div class="section__intro u-s-m-b-30">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="section__text-wrap">
+            <h1 class="section__heading u-c-secondary">ĐĂNG KÝ TÀI KHOẢN</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--====== End - Section Intro ======-->
+
+
+  <!--====== Section Content ======-->
+  <div class="section__content">
+    <div class="container">
+      <div class="row row--center">
+        <div class="col-lg-6 col-md-8 u-s-m-b-30">
+          <div class="l-f-o">
+            <div class="l-f-o__pad-box">
+              <span class="gl-text u-s-m-b-10">Bạn đã có tài khoản ?</span>
+              <div class="u-s-m-b-15">
+                <a class="l-f-o__create-link btn--e-transparent-brand-b-2 hover-link-orange" routerLink="/sign-in">
+                  Đăng nhập
+                </a>
+              </div>
+              <span
+                class="gl-text u-s-m-b-10 u-s-m-t-20">Nếu chưa có tài khoản. Điền đầy đủ thông tin để đăng ký.</span>
+              <form class="l-f-o__form" [formGroup]="formGroup">
+                <div class="row">
+                  <div class="col-6">
+                    <div class="u-s-m-b-30">
+                      <label class="gl-label" for="reg-fname">HỌ TÊN *</label>
+                      <input class="input-text input-text--primary-style" type="text" id="reg-fname"
+                             placeholder="Họ tên" formControlName="fullname">
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="u-s-m-b-30">
+                      <label class="gl-label" for="reg-email">E-MAIL *</label>
+                      <input class="input-text input-text--primary-style" type="text" id="reg-email"
+                             placeholder="Email" formControlName="email">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="u-s-m-b-30">
+                      <label class="gl-label" for="reg-phone">SĐT *</label>
+                      <input class="input-text input-text--primary-style" type="text" id="reg-phone"
+                             placeholder="Số điện thoại" formControlName="phone">
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="u-s-m-b-30">
+                      <label class="gl-label" for="reg-bdate">NGÀY SINH *</label>
+                      <input class="input-text input-text--primary-style" type="date" id="reg-bdate"
+                             placeholder="Ngày sinh" formControlName="birthDate">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="u-s-m-b-30">
+                      <label class="gl-label" for="reg-password">MẬT KHẨU *</label>
+                      <input class="input-text input-text--primary-style" type="password" id="reg-password"
+                             placeholder="Mật khẩu" formControlName="password">
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="u-s-m-b-30">
+                      <label class="gl-label" for="reg-enter-password">XÁC NHẬN MẬT KHẨU *</label>
+                      <input class="input-text input-text--primary-style" type="password" id="reg-enter-password"
+                             placeholder="Xác nhận mật khẩu" name="confirmPassword" [(ngModel)]="confirmPassword" [ngModelOptions]="{standalone: true}">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="u-s-m-b-15" style="display: flex; justify-content: center;">
+                  <button class="btn-primary-custom btn-custom--padding" type="button" (click)="onSignUp()">
+                    ĐĂNG KÝ
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--====== End - Section Content ======-->
+</div>
+<!--====== End - Section 2 ======-->
