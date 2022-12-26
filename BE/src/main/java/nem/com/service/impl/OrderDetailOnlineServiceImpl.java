@@ -3,6 +3,7 @@ package nem.com.service.impl;
 import lombok.RequiredArgsConstructor;
 import nem.com.dto.request.OrderDetailDTO;
 import nem.com.entity.OrderDetails;
+import nem.com.entity.ProductsDetails;
 import nem.com.exception.ResourceNotFoundException;
 import nem.com.repository.OrderDetailsRepository;
 import nem.com.repository.OrdersRepository;
@@ -18,6 +19,7 @@ import java.util.List;
 public class OrderDetailOnlineServiceImpl implements OrderDetailOnlineService {
 
     private final OrderDetailsRepository orderDetailsRepository;
+    private final ProductsDetailsRepository productsDetailsRepository;
 
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
@@ -44,6 +46,8 @@ public class OrderDetailOnlineServiceImpl implements OrderDetailOnlineService {
     public OrderDetails saveOrderDetailExchange(OrderDetails request) {
         OrderDetails orderDetailById = this.orderDetailsRepository.findById(request.getId()).orElseThrow(() ->
                 new ResourceNotFoundException("Id order detail not found " + request.getId()));
+        orderDetailById.setQuantity(orderDetailById.getQuantity() - request.getQuantity());
+        this.orderDetailsRepository.save(orderDetailById);
         OrderDetails newOrder = new OrderDetails();
         newOrder.setExchanges(request.getExchanges());
         newOrder.setQuantity(request.getQuantity());
@@ -63,7 +67,7 @@ public class OrderDetailOnlineServiceImpl implements OrderDetailOnlineService {
         return this.orderDetailsRepository.save(orderDetailById);
     }
 
-    public List<OrderDetails> getOrderDetailsInExchange(Long id){
+    public List<OrderDetails> getOrderDetailsInExchange(Long id) {
         return this.orderDetailsRepository.getOrderDetailsInExchange(id);
     }
 

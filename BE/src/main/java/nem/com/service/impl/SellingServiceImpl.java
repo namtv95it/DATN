@@ -83,9 +83,10 @@ public class SellingServiceImpl implements SellingService {
             orderDetails.setStatus(1);
             orderDetails.setQuantity(productDetailsDTO.getQuantity());
             orderDetails.setProductsDetail(productsDetails1);
-            orderDetails.setRatingStatus((short)1);
+            orderDetails.setRatingStatus(null);
             orderDetails.setStatus(1);
-            orderDetails.setUnitprice(productsDetails.getProduct().getPrice());
+            orderDetails.setDiscount(0.0);
+            orderDetails.setUnitprice(productDetailsDTO.getPrice());
             orderDetailsRepository.save(orderDetails);
             productsDetails.setQuantity(productsDetails.getQuantity()-productDetailsDTO.getQuantity());
             productDetailsDTO.setNameColor(productsDetails.getColor().getName());

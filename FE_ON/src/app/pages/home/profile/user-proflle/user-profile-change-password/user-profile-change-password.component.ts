@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, Validators} from "@angular/forms";
-import {MatDialogRef} from "@angular/material/dialog";
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import {Constants} from "../../../../../shared/constants/constants.module";
 import {AuthService} from "../../../../../shared/service/auth/auth.service";
 import {StorageService} from "../../../../../shared/service/storage.service";
 import {ToastrService} from "ngx-toastr";
+import { ConfirmDialogComponent } from '../../../../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-user-profile-change-password',
@@ -22,6 +23,7 @@ export class UserProfileChangePasswordComponent implements OnInit {
               private dialogRef: MatDialogRef<UserProfileChangePasswordComponent>,
               private readonly authService: AuthService,
               private readonly storageService: StorageService,
+              private readonly matDialog: MatDialog,
               private readonly toastService: ToastrService) {
   }
 
@@ -40,14 +42,26 @@ export class UserProfileChangePasswordComponent implements OnInit {
       customerId: this.storageService.getIdFromToken(),
       newPassword: this.formGroup.getRawValue().newPassword
     }
-    this.authService.changePassword(data).subscribe(res => {
-      if (res) {
-        this.toastService.success("Thay đổi mật khẩu thành công !");
-      } else {
-        this.toastService.success("Thay đổi mật khẩu thất bại !");
+    this.matDialog.open(ConfirmDialogComponent, {
+      disableClose: true,
+      hasBackdrop: true,
+      width: "25vw",
+      data: {
+        message: 'Bạn có muốn đổi mật khẩu?'
+      }
+    }).afterClosed().subscribe((result:any) => {
+      if (result === Constants.RESULT_CLOSE_DIALOG.CONFIRM) {
+        this.authService.changePassword(data).subscribe(res => {
+          if (res) {
+            this.toastService.success("Đổi mật khẩu thành công !");
+          } else {
+            this.toastService.success("Đổi mật khẩu thất bại !");
+          }
+        })
+        this.dialogRef.close(Constants.RESULT_CLOSE_DIALOG.SUCCESS);
       }
     })
-    this.dialogRef.close(Constants.RESULT_CLOSE_DIALOG.SUCCESS);
+
   }
 
 }

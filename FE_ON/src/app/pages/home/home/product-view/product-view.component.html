@@ -5,13 +5,16 @@
         <!--====== Product Detail Zoom ======-->
         <div class="pd u-s-m-b-30 row">
           <div class="col-3">
-            <ngx-slick-carousel class="carousel p-0 position-relative" #slickModal="slick-carousel" [config]="slideConfissg"
-                                (init)="slickInit($event)" (breakpoint)="breakpoint($event)" (afterChange)="afterChange($event)"
-                                (beforeChange)="beforeChange($event)" >
+            <ngx-slick-carousel class="carousel p-0 position-relative" #slickModal="slick-carousel"
+                                [config]="slideConfissg"
+                                (init)="slickInit($event)" (breakpoint)="breakpoint($event)"
+                                (afterChange)="afterChange($event)"
+                                (beforeChange)="beforeChange($event)">
 
-              <div class="row" >
+              <div class="row">
                 <div class="col-12 mb-2">
-                  <img src="{{product?.thumnail}}" (click)="changThumnail( product?.thumnail )" class="img-fluid" [class]="product?.thumnail === thumnail ? 'clickImage' : '' "
+                  <img src="{{product?.thumnail}}" (click)="changThumnail( product?.thumnail )" class="img-fluid"
+                       [class]="product?.thumnail === thumnail ? 'clickImage' : '' "
                   >
                 </div>
               </div>
@@ -37,7 +40,14 @@
           </div>
           <div>
             <div class="pd-detail__inline">
-              <span class="pd-detail__price">{{product?.price | currency: 'VND' : 'symbol' : '4.0' }}</span>
+              <span class="pd-detail__price">
+                <span class="{{(product?.discount != 0 && product?.discount != null ) ? 'product-o__discount' : ''}} m-0">
+                  {{product?.price | currencyVND}}
+                </span>
+                <span class="mx-2" *ngIf="product?.discount != 0 && product?.discount != null">
+                  {{product?.price * (1 - product?.discount / 100 ) | currencyVND}}
+                </span>
+              </span>
 
               <!--              <span class="pd-detail__discount">(76% OFF)</span-->
               <!--              >-->
@@ -94,6 +104,11 @@
             <p *ngIf="listSize.id != null && listColor.id != null">
               Số lượng còn lại: {{countProductDetail !== undefined ? countProductDetail : 0}}
             </p>
+            <div class="mb-3">
+              <a class="btn-link" (click)="openGuideSize()">
+                Hướng dẫn chọn size
+              </a>
+            </div>
             <div class="pd-detail-inline-2">
               <div class="u-s-m-b-15">
                 <!--====== Input Counter ======-->

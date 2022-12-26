@@ -19,7 +19,7 @@ export class ImportExcelDialogComponent implements OnInit {
 
   constructor(
     private readonly productDetailService: ProductDetailService,
-    private matdialog: MatDialog,
+    private matDialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public dataDialog: any,
     private toastrService: ToastrService,
     private colorService: ColorService,
@@ -95,15 +95,28 @@ export class ImportExcelDialogComponent implements OnInit {
         quantity: this.excel[i].quantity
       })
     }
-    this.productDetailService.createProductDetail(this.productDetailDto).subscribe({
-      next: (res)=>{
-        this.toastrService.success('Thêm chi tiết thành công');
-        this.matDialogRef.close();
-      },
-      error: (err)=>{
-        this.toastrService.error('Vui lòng kiểm tra lại file excel');
+
+    this.matDialog.open(ConfirmDialogComponent, {
+      disableClose: true,
+      hasBackdrop: true,
+      data: {
+          message: 'Bạn có muốn nhập hàng?'
       }
+    }).afterClosed().subscribe(result => {
+        if (result === Constant.RESULT_CLOSE_DIALOG.CONFIRM) {
+          this.productDetailService.createProductDetail(this.productDetailDto).subscribe({
+            next: (res)=>{
+              this.toastrService.success('Nhập hàng thành công');
+              this.matDialogRef.close();
+            },
+            error: (err)=>{
+              this.toastrService.error('Vui lòng kiểm tra lại file excel');
+            }
+          })
+        }
     })
+
+    
     
   }
 

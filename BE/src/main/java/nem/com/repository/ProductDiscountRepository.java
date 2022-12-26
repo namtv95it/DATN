@@ -22,4 +22,7 @@ public interface ProductDiscountRepository extends JpaRepository<ProductDiscount
     @Query("delete from ProductDiscount pd where pd.product.id = :proId and pd.discount.id = :disId")
     void deleteProductDis( @Param("proId") Integer proId , @Param("disId") Integer disId )  ;
 
+    @Query("select pd from ProductDiscount pd where pd.discount.status = 2")
+    List<ProductDiscount> findProductDiscountStatus2();
+
 }

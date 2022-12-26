@@ -5,6 +5,7 @@ import {AddressService} from "../../../../shared/service/address/address.service
 import {StorageService} from "../../../../shared/service/storage.service";
 import {Constants} from "../../../../shared/constants/constants.module";
 import {ToastrService} from "ngx-toastr";
+import { ConfirmDialogComponent } from '../../../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-address-book',
@@ -48,7 +49,7 @@ export class AddressBookComponent implements OnInit {
   findAddressByCustomerId() {
     this.addressService.findAddressByCustomerId(this.storageService.getIdFromToken()).subscribe((res: any) => {
       this.addressInCustomer = res as any[];
-      console.log(this.addressInCustomer)
+      // console.log(this.addressInCustomer)
     })
   }
 
@@ -57,15 +58,27 @@ export class AddressBookComponent implements OnInit {
       this.toastService.warning("Bạn không thể xoá địa chỉ mặc định !");
       return;
     }
-    this.addressService.deleteAddress(id).subscribe({
-      next: _ => {
-        this.toastService.success("Xoá địa chỉ thành công !")
-        this.findAddressByCustomerId();
-      },
-      error: (err) => {
-        console.log(err);
-        this.toastService.error("Xoá địa chỉ thất bại !")
+    this.matDialog.open(ConfirmDialogComponent, {
+      disableClose: true,
+      hasBackdrop: true,
+      width: "25vw",
+      data: {
+        message: 'Bạn có muốn xóa địa chỉ?'
+      }
+    }).afterClosed().subscribe((result:any) => {
+      if (result === Constants.RESULT_CLOSE_DIALOG.CONFIRM) {
+        this.addressService.deleteAddress(id).subscribe({
+          next: _ => {
+            this.toastService.success("Xoá địa chỉ thành công !")
+            this.findAddressByCustomerId();
+          },
+          error: (err) => {
+            console.log(err);
+            this.toastService.error("Xoá địa chỉ thất bại !")
+          }
+        })
       }
     })
+
   }
 }

@@ -23,6 +23,10 @@ export class ProductService {
         return this.apiService.getOneProduct(data);
     }
 
+    getProductById(id:number){
+        return this.apiService.getProductById(id);
+    }
+
     updateProduct(data: any, id: number) {
         return this.apiService.updateProduct(data, id);
     }

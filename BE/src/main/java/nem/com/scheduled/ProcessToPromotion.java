@@ -1,47 +1,83 @@
 package nem.com.scheduled;
 
+import lombok.AllArgsConstructor;
 import nem.com.entity.Discounts;
-import nem.com.utils.DiscountUtils;
+import nem.com.entity.ProductDiscount;
+import nem.com.repository.DiscountsRepository;
+import nem.com.repository.ProductDiscountRepository;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+@SpringBootApplication
+@EnableScheduling
+@AllArgsConstructor
 public class ProcessToPromotion extends Thread {
-    private Discounts discounts ;
-    private DiscountUtils discountUtils ;
+    private DiscountsRepository discountsRepository ;
+    private ProductDiscountRepository productDiscountRepository ;
 
-    public ProcessToPromotion( Discounts discounts ){
-        this.discounts = discounts ;
+    public static void main(String[] args) {
+        SpringApplication.run(ProcessToPromotion.class);
+    }
+    @Scheduled(cron = "59 04 13 * * ?")
+    public void scheduledUpdateDiscountStatus() throws Exception{
+        System.out.println("proceessssss");
+        process();
     }
 
-    @Override
-    public void run() {
-        Date newDate = new Date() ;
-        Calendar calendar = Calendar.getInstance() ;
-        try {
-            Thread.sleep( this.changeTime( newDate , this.discounts.getStartDate()) );
-            this.discountUtils.updateDiscountProductStart(this.discounts);
+    public void process(){
+        List<Discounts> listd = this.discountsRepository.findDiscountsByStatus() ;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy") ;
+        String date1 = sdf.format(new Date() ) ;
+        for ( Discounts x: listd ){
+            String date2 = sdf.format( x.getStartDate() ) ;
+            String date3 = sdf.format( x.getEndDate() ) ;
+            if( date2.equalsIgnoreCase(date1) ){
+                this.updateDiscountProductStart(x);
+            }
 
-            calendar.setTime(this.discounts.getEndDate());
-            calendar.add( Calendar.DATE , 1 );
-            Thread.sleep( this.changeTime( this.discounts.getStartDate() , calendar.getTime() ) );
-            this.discountUtils.updateDiscountProductEnd(this.discounts);
-        }catch ( Exception e){
-            throw new RuntimeException() ;
+            if (date3.equalsIgnoreCase(date1)) {
+                this.updateDiscountProductEnd(x);
+            }
         }
     }
 
-    private Long changeTime( Date startDate , Date endDate ){
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY") ;
-        Calendar c1 = Calendar.getInstance();
-        Calendar c2 = Calendar.getInstance();
-        if( sdf.format(startDate).equalsIgnoreCase( sdf.format(endDate) ) ){
-            return 0L ;
-        }else {
-            c1.setTime(startDate);
-            c2.setTime(endDate);
-            return c2.getTime().getTime() - c1.getTime().getTime() ;
+    public void updateDiscountProductStart(Discounts discounts ) {
+        List<ProductDiscount> listPd = this.productDiscountRepository.findAllPd(discounts.getId()) ;
+        List<Integer> listPro = new ArrayList<>();
+
+        if( listPd.size() != 0 ){
+            for( ProductDiscount x: listPd ){
+                if( x.getProduct().getDiscount() < discounts.getDiscount() || x.getDiscount() == null ){
+                    listPro.add(x.getProduct().getId() );
+                }
+            }
         }
+
+        Integer[] arr = listPro.toArray(Integer[]::new) ;
+        discounts.setStatus(2);
+        this.discountsRepository.save( discounts) ;
+        this.discountsRepository.updateDiscountProduct( discounts.getDiscount() , arr );
+    }
+
+    public void updateDiscountProductEnd(Discounts discounts ) {
+        List<ProductDiscount> listPd = this.productDiscountRepository.findAllPd(discounts.getId()) ;
+        List<Integer> listPro = new ArrayList<>();
+
+        if( listPd.size() != 0 ){
+            for( ProductDiscount x: listPd ){
+                listPro.add(x.getProduct().getId() );
+            }
+        }
+
+        discounts.setStatus(3);
+        this.discountsRepository.save(discounts) ;
+        this.discountsRepository.updateDiscountProduct( 0 , listPro.toArray(Integer[]::new)  );
     }
 }

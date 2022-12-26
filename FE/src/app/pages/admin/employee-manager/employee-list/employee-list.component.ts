@@ -7,6 +7,8 @@ import {ConfirmDialogComponent} from '../../../../shared/confirm-dialog/confirm-
 import {Constant} from '../../../../shared/constants/Constant';
 import {EmployeeFormComponent} from '../employee-form/employee-form.component';
 import {EmployeeService} from 'app/shared/service/employee/employee.service'
+import {StorageService} from '../../../../shared/service/storage.service';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
     selector: 'app-employee-list',
@@ -18,13 +20,15 @@ export class EmployeeListComponent implements OnInit {
     TYPE_DIALOG = Constant.TYPE_DIALOG ;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-    displayedColumns: string[] = [ 'photo' , 'fullname', 'email',  'birthday', 'phone' , 'address', 'role', 'status' ,'control'];
+    displayedColumns: string[] = ['fullname',  'photo', 'email',  'birthday', 'phone' , 'address', 'role', 'status' ,'control'];
     dataSource = new MatTableDataSource();
     message = ''
 
 
     constructor(private dialog: MatDialog ,
-                private emService: EmployeeService ) {
+                private emService: EmployeeService,
+                public storageService: StorageService,
+                private readonly toast: ToastrService) {
     }
 
     ngOnInit(): void {
@@ -68,6 +72,10 @@ export class EmployeeListComponent implements OnInit {
             this.message = 'Bạn muốn mở khóa nhân viên này không?'
         }else {
             this.message = 'Bạn muốn xóa nhân viên này không?'
+            if(this.storageService.getIdFromToken() === row.id){
+                this.toast.error("Bạn không thể vô hiệu hoá chính mình");
+                return;
+            }
         }
         const dialogRef = this.dialog.open( ConfirmDialogComponent, {
             width: '25vw',

@@ -30,6 +30,11 @@ public class CustomerController {
         return new ResponseEntity<>(customerService.get(id), HttpStatus.OK);
     }
 
+    @GetMapping("/getAllByStatus")
+    public ResponseEntity<List<Customers>> getAllByStatus() {
+        return new ResponseEntity<>(customerService.getAllByStatus(), HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<Customers> save(@RequestBody Customers customer) {
         return new ResponseEntity<>(customerService.save(customer), HttpStatus.CREATED);

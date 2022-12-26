@@ -5,14 +5,10 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
   templateUrl: './stars.component.html',
   styleUrls: ['./stars.component.css']
 })
-export class StarsComponent implements OnInit {
+export class StarsComponent{
 
   @Input() rating: number = 0;
   star = [ 1 ,2 ,3 ,4 ,5]
   constructor() {
   }
-
-  ngOnInit(): void {
-  }
-
 }

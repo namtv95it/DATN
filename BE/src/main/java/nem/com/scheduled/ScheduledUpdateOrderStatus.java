@@ -24,6 +24,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,7 +41,7 @@ public class ScheduledUpdateOrderStatus {
         SpringApplication.run(ScheduledUpdateOrderStatus.class, args);
     }
 
-    @Scheduled(cron = "0 0 5-22 * * *")
+    @Scheduled(cron = "0 0 6-22 * * *")
     public void scheduledUpdateOrderStatus() throws IOException {
         log.info("scheduledUpdateOrderStatus");
         this.updateStatus();
@@ -56,6 +57,7 @@ public class ScheduledUpdateOrderStatus {
                         if (ordersStatus.get(i).getStatus() != statusGhnNumber){
                             Orders orders = ordersStatus.get(i);
                             orders.setStatus(statusGhnNumber);
+                            orders.setShippedDate(new Date());
                             log.info("--Cập nhật trạng thái đơn hàng: {} --",ordersStatus.get(i).getOrderCode());
                             this.ordersRepository.save(orders);
                         }

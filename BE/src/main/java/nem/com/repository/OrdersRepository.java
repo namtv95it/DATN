@@ -17,6 +17,16 @@ import java.util.Date;
 import java.util.List;
 
 public interface OrdersRepository extends JpaRepository<Orders, Long> {
+
+    @Query("select o from Orders o " +
+            "join OrderDetails od on o.id = od.order.id " +
+            "join Exchanges e on e.id = od.exchanges.id "+
+            "where (:fullname is null or :fullname like '' or o.customer.fullname like concat('%',:fullname,'%')) " +
+            "and (:id is null or o.id = :id) " +
+            "and (:orderCode is null or :orderCode like '' or o.orderCode like concat('%',:orderCode,'%')) " +
+            "and o.status = :status")
+    Page<Orders> searchOrdersExchange(String fullname, Long id, String orderCode, Integer status, Pageable pageable);
+
     @Query("select distinct o from Orders o " +
             "join OrderDetails od on o.id = od.order.id " +
             "join Exchanges e on e.id = od.exchanges.id ")

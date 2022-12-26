@@ -2,12 +2,12 @@
     <div class="container-fluid">
         <div class="card custom-card">
             <div class="card-body">
-                 <button class="btn btn-danger" (click)="deleteRating()">Xóa Tất</button>
-                 <button class="btn btn-primary mx-2" (click)="approveRating()">Duyệt</button>
+                 <button class="btn btn-danger" [disabled]="dataSource.data.length==0" (click)="deleteRating()">Xóa đánh giá</button>
+                 <button class="btn btn-primary mx-2" [disabled]="dataSource.data.length==0" (click)="approveRating()">Duyệt đánh giá</button>
             </div>
             <div class="card-body">
                     <div class="col-12 p-0">
-                        <table class="w-100" mat-table [dataSource]="dataSource">
+                        <table class="w-100 table-hover" mat-table [dataSource]="dataSource">
                             <!-- Checkbox Column -->
                             <ng-container matColumnDef="select">
                                 <th mat-header-cell *matHeaderCellDef>
@@ -40,22 +40,19 @@
                             </ng-container>
 
                             <!-- Name Column -->
-                            <ng-container matColumnDef="action">
-                                <th class="text-center" mat-header-cell *matHeaderCellDef> Thao tác </th>
-                                <td class="text-center" mat-cell *matCellDef="let element">
-                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                      </button>
-                                      <mat-menu #menu="matMenu">
-                                        <button mat-menu-item (click)="openDialogForm( TYPE_DIALOG.UPDATE , element)">
-                                            <span>Sửa thông tin</span>
-                                          </button>
-                                          <button mat-menu-item (click)="openDialogDelete( element.status , element)">
-                                            <span>{{element.status == 2 ? 'Kích hoạt' : 'Hủy tài khoản'}}</span>
-                                          </button>
-                                      </mat-menu>
-                                </td>
-                            </ng-container>
+<!--                            <ng-container matColumnDef="action">-->
+<!--                                <th class="text-center" mat-header-cell *matHeaderCellDef> Thao tác </th>-->
+<!--                                <td class="text-center" mat-cell *matCellDef="let element">-->
+<!--                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">-->
+<!--                                        <i class="fas fa-ellipsis-v"></i>-->
+<!--                                      </button>-->
+<!--                                      <mat-menu #menu="matMenu">-->
+<!--                                          <button mat-menu-item (click)="openDialogDelete( element.status , element)">-->
+<!--                                            <span>{{element.status == 2 ? 'Kích hoạt' : 'Hủy tài khoản'}}</span>-->
+<!--                                          </button>-->
+<!--                                      </mat-menu>-->
+<!--                                </td>-->
+<!--                            </ng-container>-->
 
                             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

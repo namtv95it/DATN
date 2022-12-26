@@ -13,4 +13,5 @@ public class RegisterFormUser {
     private String phone;
     private String password;
     private  Timestamp birthDate;
+    private String photo;
 }

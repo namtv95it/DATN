@@ -13,7 +13,7 @@ export class SellingApiService {
   constructor(private readonly http: HttpClient) { }
 
   getAllCategories(): Observable<any>{
-    return this.http.get(`${this.api}category`)
+    return this.http.get(`${this.api}category/all`)
   }
 
   getProByCate(id: any): Observable<any>{

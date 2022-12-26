@@ -53,7 +53,17 @@
 
             <mat-tab *ngFor="let s of listStatus">
               <ng-template mat-tab-label>
-                <span>
+                <div [matBadge]="badge" matBadgeColor="warn" matBadgeOverlap="false" *ngIf="s=='Trả hàng/Hoàn tiền' && badge!=0" >
+                  <span>
+                    {{s}}
+                  </span>
+                </div>
+                <div *ngIf="s=='Trả hàng/Hoàn tiền' && badge==0" >
+                  <span>
+                    {{s}}
+                  </span>
+                </div>
+                <span *ngIf="s!='Trả hàng/Hoàn tiền'">
                   {{s}}
                 </span>
               </ng-template>
@@ -90,7 +100,7 @@
                               </span>
                             </td>
                             <td>
-                              {{order.orders.total| currency:' ':'symbol':'0.0-2'}}đ
+                              {{order.orders.total| currency:' ':'symbol':'0.0-2'}}₫
                             </td>
                             <td>
                               <div [ngSwitch]="order.orders.status">

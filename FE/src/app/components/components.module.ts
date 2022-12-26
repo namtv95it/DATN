@@ -6,12 +6,14 @@ import { FooterComponent } from './footer/footer.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatBadgeModule} from '@angular/material/badge';
 
 @NgModule({
     imports: [
         CommonModule,
         RouterModule,
         MatExpansionModule,
+        MatBadgeModule,
     ],
   declarations: [
     FooterComponent,

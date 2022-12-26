@@ -1,23 +1,24 @@
 .mat-dialog-content {
     max-height: 75vh;
 }
-table {
+.product-view table {
     width: 100%;
   }
-  .mat-form-field {
+  .product-view .mat-form-field {
     font-size: 14px;
     width: 100%;
   }
-  td, th {
+  .product-view td,.product-view th {
     text-align: center;
     width: 10%;
   }
-  th{
+  .product-view th{
     text-align: center !important;
     font-weight: bold !important;
     font-size: 1em !important;
     color: black !important;
   }
+
 .order-detail::-webkit-scrollbar,
 .list-category ul::-webkit-scrollbar,
 .payment-content::-webkit-scrollbar,

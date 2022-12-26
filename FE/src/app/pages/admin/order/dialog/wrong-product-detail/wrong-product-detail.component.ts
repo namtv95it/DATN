@@ -36,12 +36,7 @@ export class WrongProductDetailComponent implements OnInit {
             product: product
         }
     }).afterClosed().subscribe(value => {
-      console.log('value');
-      console.log(value);
-      
         if (!(value == null || value == undefined)) {
-          console.log('Giao nhầm');
-          
         }
       }
     )

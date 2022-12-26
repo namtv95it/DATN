@@ -34,7 +34,6 @@ export class ProfileComponent implements OnInit, OnChanges {
   countOrder(){
       for( let x of this.listOrder ){
           if( x.status == 4 ){
-            console.log(x.status)
               this.countCancel += 1;
           }
       }

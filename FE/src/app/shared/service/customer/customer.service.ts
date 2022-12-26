@@ -18,6 +18,10 @@ export class CustomerService {
   getAllCustomer() {
     return this.apiService.getAllCustomer();
   }
+  
+  getAllCustomerByStatus() {
+    return this.apiService.getAllCustomerBystatus();
+  }
 
   getCustomer(id: number) {
     return this.apiService.getCustomer(id);

@@ -17,7 +17,7 @@ public interface DiscountsRepository extends JpaRepository<Discounts , Integer> 
     @Query("update Products p set p.discount = :discount where p.id in (:id)")
     void updateDiscountProduct(@Param("discount") Integer discount , @Param("id") Integer[] id );
 
-    @Query("select d from Discounts d where d.status = 1 ")
+    @Query("select d from Discounts d where d.status = 1 or d.status = 2")
     List<Discounts> findDiscountsByStatus() ;
 
     @Query("select d from Discounts d where (:name is null or d.discountName like concat('%' , :name , '%')) and" +
@@ -25,4 +25,5 @@ public interface DiscountsRepository extends JpaRepository<Discounts , Integer> 
             " (:status is null or d.status = :status)")
     List<Discounts> findAll(@Param("name") String name , @Param("startDate")Date startDate ,
                             @Param("endDate") Date endDate , @Param("status") Integer status ) ;
+
 }

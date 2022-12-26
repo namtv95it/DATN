@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import * as Chartist from 'chartist';
 import {FormBuilder} from '@angular/forms';
 import {StatiscalService} from '../../../shared/service/statiscal/statiscal.service';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginator} from '@angular/material/paginator';
 
 @Component({
   selector: 'statical-turnover',
@@ -9,6 +11,9 @@ import {StatiscalService} from '../../../shared/service/statiscal/statiscal.serv
   styleUrls: ['./statical-turnover.component.scss']
 })
 export class StaticalTurnoverComponent implements OnInit {
+    displayedColumns: string[] = ['no' ,'position', 'name'];
+    dataSource = new MatTableDataSource();
+    @ViewChild(MatPaginator) paginator: MatPaginator;
 
   newDate = new Date() ;
   listYear: any[] = [] ;
@@ -48,9 +53,15 @@ export class StaticalTurnoverComponent implements OnInit {
   getStatical(){
       this.staticalService.turnover( this.form.getRawValue() ).subscribe((value: any) => {
           this.listStatic = value
-          if( this.listStatic.length != 0 ){
+          this.dataSource = new MatTableDataSource(value) ;
+          this.dataSource.paginator = this.paginator;
+
+          if( this.listStatic.length != 0  ){
               this.checkEmpty = false ;
               this.addDateIntoList( value , this.listLabel , this.listSeries , this.max ) ;
+              if( this.listStatic.length >= 13){
+                  this.showChart = 1 ;
+              }
           }else {
               this.checkEmpty = true ;
           }

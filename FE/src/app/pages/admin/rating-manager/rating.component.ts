@@ -16,7 +16,7 @@ import {Constant} from '../../../shared/constants/Constant';
 
 export class RatingComponent implements OnInit {
     array: any[] = [];
-    displayedColumns: string[] = ['select', 'image', 'content', 'action'];
+    displayedColumns: string[] = ['select', 'image', 'content'];
     dataSource: any;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     selection = new SelectionModel<any>(true, []);
@@ -56,20 +56,33 @@ export class RatingComponent implements OnInit {
     }
 
     approveRating() {
-        // this.toast.
-        this.ratingService.updateRating(this.array).subscribe({
-            next: () => {
-                this.toast.success('Duyệt thành công');
-                this.array = [];
-                this.getAllRating();
-            },
-            error: () => {
-                this.toast.error('Duyệt thất bại');
+        this.dialog.open(ConfirmDialogComponent, {
+            disableClose: true,
+            hasBackdrop: true,
+            data: {
+                message: 'Bạn có muốn duyệt đánh giá?'
             }
-        });
+        }).afterClosed().subscribe(result => {
+            if (result === Constant.RESULT_CLOSE_DIALOG.CONFIRM) {
+                this.ratingService.updateRating(this.array).subscribe({
+                    next: () => {
+                        this.toast.success('Duyệt thành công');
+                        this.array = [];
+                        this.getAllRating();
+                    },
+                    error: () => {
+                        this.toast.error('Duyệt thất bại. Vui lòng thử lại sau');
+                    }
+                });
+            }
+        })
+        // this.toast.
+        
     }
 
     deleteRating() {
+        
+        
         this.dialog.open(ConfirmDialogComponent, {
             hasBackdrop: true,
             width: '30vw',

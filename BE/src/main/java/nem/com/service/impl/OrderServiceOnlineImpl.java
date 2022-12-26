@@ -67,6 +67,9 @@ public class OrderServiceOnlineImpl implements OrderServiceOnline {
             if (cart.getQuantity() > productsDetail.getQuantity()) {
                 throw new LimitQuantityException("Số lượng không đủ. Vui lòng cập nhật lại số lượng trong giỏ hàng !");
             }
+            if (productsDetail.getProduct().getStatus()==0){
+                throw new ResourceNotFoundException("Giỏ hàng của bạn có sản phẩm ngừng kinh doanh. Vui lòng cập nhật lại giỏ hàng !");
+            }
             this.orderDetailOnlineService.save(orderDetail);
             productsDetail.setQuantity(productsDetail.getQuantity() - cart.getQuantity());
             this.productsDetailsRepository.save(productsDetail);

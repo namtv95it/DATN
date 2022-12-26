@@ -54,6 +54,7 @@ export class ProductFormComponent implements OnInit {
     weight: ["", [Validators.min(1), Validators.required]],
     description: [""],
     thumnail: [""],
+    discount: 0
   });
 
   productImageFormGroup = this.fb.group({
@@ -124,11 +125,7 @@ export class ProductFormComponent implements OnInit {
   }
 
   async createProduct(stepper: MatStepper) {
-    this.trimService.inputTrim(this.formGroup, ["name", "description"]);
-    this.formGroup.markAllAsTouched();
-    if (this.formGroup.invalid) {
-      return;
-    }
+    
     this.isLoading = true;
     if (this.thumnailFile.length > 0) {
       await this.uploadThumnail();
@@ -153,6 +150,11 @@ export class ProductFormComponent implements OnInit {
   }
 
   createP(stepper: MatStepper){
+    this.trimService.inputTrim(this.formGroup, ["name", "description"]);
+    this.formGroup.markAllAsTouched();
+    if (this.formGroup.invalid) {
+      return;
+    }
     this.dialog.open(ConfirmDialogComponent, {
       disableClose: true,
       hasBackdrop: true,

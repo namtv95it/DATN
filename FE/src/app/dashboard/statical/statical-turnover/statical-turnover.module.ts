@@ -9,6 +9,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatTableModule} from '@angular/material/table';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 @NgModule({
   declarations: [ StaticalTurnoverComponent ],
@@ -22,7 +24,9 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
         MatDatepickerModule,
         MatNativeDateModule,
         FormsModule,
-        ReactiveFormsModule ,
+        ReactiveFormsModule,
+        MatTableModule,
+        MatPaginatorModule,
     ]
 })
 export class StaticalTurnoverModule { }

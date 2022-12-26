@@ -76,16 +76,16 @@ export class HomeComponent implements OnInit {
     prevArrow: '<button type="button" style="z-index: 3" class="text-white btn btn-dark opacity-50 position-absolute top-50 start-0 translate-middle-y"><i class="fas fa-chevron-left"></i></button>'};
 
   slickInit(e: any) {
-    console.log('slick initialized');
+    // console.log('slick initialized');
   }
   breakpoint(e: any) {
-    console.log('breakpoint');
+    // console.log('breakpoint');
   }
   afterChange(e: any) {
-    console.log('afterChange');
+    // console.log('afterChange');
   }
   beforeChange(e: any) {
-    console.log('beforeChange');
+    // console.log('beforeChange');
   }
 
   OpenProductView( product: any ){

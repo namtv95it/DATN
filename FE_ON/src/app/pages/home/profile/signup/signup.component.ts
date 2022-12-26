@@ -68,7 +68,8 @@ export class SignupComponent implements OnInit {
       email: email?.trim(),
       phone: phone?.trim(),
       birthDate,
-      password: password?.trim()
+      password: password?.trim(),
+      photo: 'https://res.cloudinary.com/nemfashion/image/upload/v1664814655/unknow_ejzkbl.jpg'
     }
 
     console.log(data);

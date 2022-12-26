@@ -19,6 +19,14 @@ export const router_user: Routes = [
     loadChildren: () => import('../../pages/home/home/home.module').then(m => m.HomeModule)
   },
   {
+    path: 'about',
+    loadChildren: () => import('../../pages/home/about/about.module').then(m => m.AboutModule)
+  },
+  {
+    path: 'contact',
+    loadChildren: () => import('../../pages/home/contact/contact.module').then(m => m.ContactModule)
+  },
+  {
     path: 'profile',
     loadChildren: () => import('../../pages/home/profile/profile.module').then(m => m.ProfileModule),
     canActivate: [AuthGuard, RoleGuard],

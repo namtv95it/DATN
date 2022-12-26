@@ -36,7 +36,6 @@ export class CategoryService {
     updateCategory(data: any) {
         return this.categoryApiService.updateCategory(data).subscribe({
             next: (res) => {
-                console.log(res)
                 this.toastService.success('Cập nhật danh mục thành công !');
                 this.isCloseDialog.next(true);
             },

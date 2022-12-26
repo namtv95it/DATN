@@ -19,6 +19,10 @@ export class ProductApiService {
         return this.http.get(`${ApiConstant.product}/${id}`);
     }
 
+    getProductById(id:number):Observable<any>{
+        return this.http.get(`${ApiConstant.product}/${id}`);
+    }
+
 
     createProduct(data: any): Observable<any> {
         return this.http.post(ApiConstant.product, data);

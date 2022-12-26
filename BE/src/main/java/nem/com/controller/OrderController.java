@@ -86,7 +86,22 @@ public class OrderController {
             @RequestParam(value = "page",defaultValue = "0") Integer page,
             @RequestParam(value = "size",defaultValue = "10") Integer size
     ){
-        if (searchOrderDTO.getStatus() != -1){
+        if (searchOrderDTO.getStatus() == 5){
+            searchOrderDTO.setStatus(3);
+            List<OrderResponseDTO> orderResponseDTOList = new ArrayList<>();
+            Page<Orders> ordersList = this.orderService.searchOrdersExchange(searchOrderDTO,page,size);
+            for (Orders orders: ordersList
+            ) {
+                OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
+                orderResponseDTO.setOrders(orders);
+                List<OrderDetails> orderDetailsList = this.orderDetailService.findByOrderId(orders.getId());
+                orderResponseDTO.setOrderDetailsList(orderDetailsList);
+                orderResponseDTO.setTotalPage(ordersList.getTotalPages());
+                orderResponseDTO.setTotalElements(ordersList.getTotalElements());
+                orderResponseDTOList.add(orderResponseDTO);
+            }
+            return new ResponseEntity<>(orderResponseDTOList,HttpStatus.OK);
+        }else if (searchOrderDTO.getStatus() != 7 && searchOrderDTO.getStatus() != 5){
             List<OrderResponseDTO> orderResponseDTOList = new ArrayList<>();
             Page<Orders> ordersList = this.orderService.searchOrderByStatus(searchOrderDTO,page,size);
             for (Orders orders: ordersList

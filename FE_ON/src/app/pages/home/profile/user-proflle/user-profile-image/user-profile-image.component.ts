@@ -5,6 +5,7 @@ import {CustomerService} from "../../../../../shared/service/customer/customer.s
 import {StorageService} from "../../../../../shared/service/storage.service";
 import {UploadCloudinaryService} from "../../../../../shared/service/cloudinary/upload-cloudinary.service";
 import {Constants} from "../../../../../shared/constants/constants.module";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-user-profile-image',
@@ -17,11 +18,13 @@ export class UserProfileImageComponent implements OnInit {
   avatarFile: any[] = [];
   avatarUrl: any;
   employee: any;
+  isLoading: boolean = false;
 
   constructor(private dialogRef: MatDialogRef<UserProflleComponent>,
               private customerService: CustomerService,
               private storageService: StorageService,
-              private uploadService: UploadCloudinaryService) {
+              private uploadService: UploadCloudinaryService,
+              private toastService: ToastrService) {
   }
 
   ngOnInit(): void {
@@ -36,10 +39,17 @@ export class UserProfileImageComponent implements OnInit {
   }
 
   saveImage() {
-    this.uploadImage()
+    this.isLoading = true;
+    this.uploadImage().finally(() => {
+      this.isLoading = false;
+    })
   }
 
   async uploadImage() {
+    if (this.avatarFile.length === 0) {
+      this.toastService.warning("Không được để trống ảnh !")
+      return;
+    }
     const formData = new FormData();
     formData.append('files', this.avatarFile[0]);
     this.avatarUrl = await this.uploadService.upload(formData).toPromise();

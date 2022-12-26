@@ -12,6 +12,6 @@ public interface SizesRepository extends JpaRepository<Sizes, Integer> {
     @Query("select  s from Sizes s where s.id in (select p.size.id from  ProductsDetails p where p.product.id = :productId and p.quantity > 0) order by s.id asc ")
     List<Sizes> findAllSizeInProductDetails(@Param("productId") Integer productId);
 
-    @Query("select new SizeDTO(s.id , s.code , sum(p.quantity)) from Sizes s left join ProductsDetails p on s.id = p.size.id group by s.id , s.code ")
+    @Query("select new SizeDTO(s.id , s.code ,  count( distinct p.product.id)) from Sizes s left join ProductsDetails p on s.id = p.size.id group by s.id , s.code ")
     List<SizeDTO> getSizes() ;
 }

@@ -84,7 +84,9 @@ export class ProductListComponent implements OnInit  {
       disableClose: true
     });
     dialogRef.afterClosed().subscribe( value => {
-      this.getAllProduct();
+      if (value=='submit') {
+        this.getAllProduct();
+      }
     })
   }
 

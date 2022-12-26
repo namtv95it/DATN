@@ -50,7 +50,8 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     //   httpHeader = httpHeader.append('Token', Ghn.TOKEN);
     // }
     if (req.url.includes('https://online-gateway.ghn.vn')) {
-      httpHeader = httpHeader.append('token', 'cff0fcca-5ddf-11ed-ad26-3a4226f77ff0')
+      httpHeader = httpHeader.append('Token', 'cff0fcca-5ddf-11ed-ad26-3a4226f77ff0');
+      httpHeader = httpHeader.append('ShopId', '3424019');
     }
     // if (req.url.includes('https://dev-online-gateway.ghn.vn/shiip/public-api/v2/a5/gen-token')){
     //   httpHeader = httpHeader.append('Token', Ghn.TOKEN);

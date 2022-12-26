@@ -25,7 +25,7 @@
                     <div class="info-product-search">
                         <p class="name-product-search" #tooltip="matTooltip"
                            matTooltip="{{pro.name.length>40?pro.name:''}}">{{pro.name}}</p>
-                        <span class="price-product-search"> {{pro.price| currency:' ':'symbol':'0.0-2'}}đ</span>
+                        <span class="price-product-search"> {{pro.price| currency:' ':'symbol':'0.0-2'}}₫</span>
                     </div>
                 </a>
                 </mat-option>
@@ -56,7 +56,7 @@
           <!-- Category Column -->
           <ng-container matColumnDef="price">
             <th class="text-center" mat-header-cell *matHeaderCellDef>Đơn giá</th>
-            <td mat-cell *matCellDef="let row">{{ row.unitprice| currency:' ':'symbol':'0.0-2' }}đ</td>
+            <td mat-cell *matCellDef="let row">{{ row.unitprice| currency:' ':'symbol':'0.0-2' }}₫</td>
           </ng-container>
   
           <!-- Category Column -->

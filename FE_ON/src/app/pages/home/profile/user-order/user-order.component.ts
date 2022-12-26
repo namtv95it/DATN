@@ -30,6 +30,13 @@ export class UserOrderComponent implements OnInit {
     // { status: 5 , name: 'Trả hàng hoàn tiền'}
   ]
 
+  readonly TYPE_EXCHANGE = {
+    CHO_XAC_NHAN: 0,
+    NHAN_HANG: 1,
+    DONG_Y_TRA: 2,
+    HUY_TRA: 3
+  }
+
   constructor(private dialog: MatDialog,
               private orderService: OrderService,
               private orderDetailService: OrderDetailService,
@@ -84,12 +91,12 @@ export class UserOrderComponent implements OnInit {
     this.orderService.getAllOrder(this.storageService.getIdFromToken()).subscribe(data => {
       this.listOrder = data;
       console.log(this.listOrder);
+
     })
   }
 
   findAllOrderDetail() {
     this.orderDetailService.getAllOrderDetail(this.storageService.getIdFromToken()).subscribe(data => {
-      console.log(data);
       return this.listOrderDetail = data;
     })
   }

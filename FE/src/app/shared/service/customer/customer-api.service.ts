@@ -21,6 +21,10 @@ export class CustomerApiService {
         return this.http.get(ApiConstant.customer);
     }
 
+    getAllCustomerBystatus(): Observable<any> {
+        return this.http.get(`${ApiConstant.customer}/getAllByStatus`);
+    }
+
     getCustomer(id: number): Observable<any> {
         return this.http.get(`${ApiConstant.customer}/${id}`);
     }

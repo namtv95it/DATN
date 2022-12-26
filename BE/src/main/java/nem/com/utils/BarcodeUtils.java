@@ -47,7 +47,8 @@ public class BarcodeUtils {
                 graphics.setColor(Color.BLACK);
                 graphics.setFont(new Font("SansSerif", Font.PLAIN, 20));
                 int x = price<100000?wid/2-50:price<1000000?wid/2-55:price<10000000?wid/2-65:wid/2-70;
-                graphics.drawString(String.format("%,.0f", price)+" VND", x, hei-10);
+                int x2 = wid/2-35;
+                graphics.drawString(data, x2, hei-10);
                 ImageIO.write(bufferedImage,"png",os);
                 result.append("data:image/png;base64,");
                 result.append(new String(Base64.getEncoder().encode(os.toByteArray())));

@@ -26,10 +26,25 @@ export function compareDate( startDate: string , endDate: string ){
         const startDateControl = formGroup.controls[startDate] ;
         const endDateControl = formGroup.controls[endDate] ;
 
-        const a = new Date(startDateControl.value)
-        const b = new Date(endDateControl.value )
+        const options = { month: "long", day: "numeric", year: "numeric" };
 
-        if( a >= b ){
+        // @ts-ignore
+        const a = new Intl.DateTimeFormat("en-US", options).format(new Date(startDateControl.value));
+        // @ts-ignore
+        const b = new Intl.DateTimeFormat("en-US", options).format(new Date(endDateControl.value));
+        // @ts-ignore
+        const c = new Intl.DateTimeFormat("en-US", options).format(new Date());
+        const c1 = new Date( new Date().getFullYear() , new Date().getMonth() , new Date().getDate() - 1) ;
+        const a1 = new Date(startDateControl.value)
+        const b1 = new Date(endDateControl.value )
+
+        if( c1 >= a1 ) {
+            startDateControl.setErrors({compareStart: true})
+        }else {
+            startDateControl.setErrors(null);
+        }
+
+        if( a > b || a1 > b1){
             endDateControl.setErrors({compareDate: true});
         }else {
             endDateControl.setErrors(null) ;
@@ -39,7 +54,7 @@ export function compareDate( startDate: string , endDate: string ){
 
 export function checkDiscount( c: AbstractControl ){
     const b = c.value ;
-    if( b < 0 || b > 100){
+    if( b <= 0 || b > 99){
         return {isDiscount: true}
     }
     return null ;

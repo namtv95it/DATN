@@ -11,6 +11,8 @@ public interface CustomerService {
 
     List<Customers> getAll();
 
+    List<Customers> getAllByStatus();
+
     Customers save(Customers customers);
 
     Customers update(Customers customers);

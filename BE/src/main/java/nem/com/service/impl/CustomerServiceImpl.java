@@ -39,6 +39,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public List<Customers> getAllByStatus() {
+        return this.customersRepository.fillAllByStatus();
+    }
+
+    @Override
     public Customers save(Customers customers) {
 
         customersRepository.findCustomersByEmail(customers.getEmail()).ifPresent(e -> {
@@ -102,7 +107,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customers findCustomerByEmail(String email) {
         return this.customersRepository.findCustomersByEmail(email).orElseThrow(() -> {
-            throw new ResourceNotFoundException("Email not exist !");
+            throw new ResourceNotFoundException("Email không tồn tại !");
         });
     }
 

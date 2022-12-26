@@ -1,11 +1,12 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import {Constants} from "../../../../shared/constants/constants.module";
 import {FormBuilder} from "@angular/forms";
 import {AddressService} from "../../../../shared/service/address/address.service";
 import {ToastrService} from "ngx-toastr";
 import {BehaviorSubject} from "rxjs";
 import {StorageService} from "../../../../shared/service/storage.service";
+import { ConfirmDialogComponent } from '../../../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-add-new-address',
@@ -45,6 +46,7 @@ export class AddNewAddressComponent implements OnInit {
               private readonly fb: FormBuilder,
               private readonly addressService: AddressService,
               private readonly toastService: ToastrService,
+              private readonly matDialog: MatDialog,
               private readonly storageService: StorageService) {
   }
 
@@ -115,45 +117,62 @@ export class AddNewAddressComponent implements OnInit {
       return;
     }
 
-    if (this.matDataDialog.type === Constants.TYPE_DIALOG.NEW) {
-      this.formGroup.patchValue({
-        wardName: this.wardName,
-        districtName: this.districtName,
-        provinceName: this.provinceName
-      })
-      if (this.matDataDialog.listAddress.length == 0) { //Đặt địa chỉ đầu tiên làm mặc định
-        this.formGroup.patchValue({status: 1});
+    this.matDialog.open(ConfirmDialogComponent, {
+      disableClose: true,
+      hasBackdrop: true,
+      width: "25vw",
+      data: {
+        message: 'Bạn có muốn thêm địa chỉ?'
       }
-      this.addressService.createAddress(this.formGroup.getRawValue())
-        .subscribe((data: any) => {
-          if (data.id) {
-            this.toastService.success("Thêm mới địa chỉ thành công !")
+    }).afterClosed().subscribe((result:any) => {
+      if (result === Constants.RESULT_CLOSE_DIALOG.CONFIRM) {
+
+
+        if (this.matDataDialog.type === Constants.TYPE_DIALOG.NEW) {
+          this.formGroup.patchValue({
+            wardName: this.wardName,
+            districtName: this.districtName,
+            provinceName: this.provinceName
+          })
+          if (this.matDataDialog.listAddress.length == 0) { //Đặt địa chỉ đầu tiên làm mặc định
+            this.formGroup.patchValue({status: 1});
+          }
+          this.addressService.createAddress(this.formGroup.getRawValue())
+            .subscribe((data: any) => {
+              if (data.id) {
+                this.toastService.success("Thêm mới địa chỉ thành công !")
+              } else {
+                this.toastService.error("Thêm mới địa chỉ thất bại !")
+              }
+            })
+        } else {
+          if (this.defaultAddress === 1) {
+            this.addressService.findAddressByStatus(this.storageService.getIdFromToken()).subscribe((data: any) => {
+              if (data.id != this.matDataDialog.row.id) {
+                data.status = 0;
+                this.addressService.updateAddress(data.id, data).subscribe();
+              }
+            })
+            this.formGroup.patchValue({status: 1});
           } else {
-            this.toastService.error("Thêm mới địa chỉ thất bại !")
+            this.formGroup.patchValue({status: this.matDataDialog.row.status});
           }
-        })
-    } else {
-      if (this.defaultAddress === 1) {
-        this.addressService.findAddressByStatus(this.storageService.getIdFromToken()).subscribe((data: any) => {
-          if (data.id != this.matDataDialog.row.id) {
-            data.status = 0;
-            this.addressService.updateAddress(data.id, data).subscribe();
-          }
-        })
-        this.formGroup.patchValue({status: 1});
-      } else {
-        this.formGroup.patchValue({status: this.matDataDialog.row.status});
+          this.addressService.updateAddress(this.matDataDialog.row.id, this.formGroup.getRawValue())
+            .subscribe((data: any) => {
+              if (data.id) {
+                this.toastService.success("Cập nhật địa chỉ thành công !")
+              } else {
+                this.toastService.error("Cập nhật địa chỉ thất bại !")
+              }
+            })
+        }
+        this.matDialogRef.close(Constants.RESULT_CLOSE_DIALOG.SUCCESS);
+
+
       }
-      this.addressService.updateAddress(this.matDataDialog.row.id, this.formGroup.getRawValue())
-        .subscribe((data: any) => {
-          if (data.id) {
-            this.toastService.success("Cập nhật địa chỉ thành công !")
-          } else {
-            this.toastService.error("Cập nhật địa chỉ thất bại !")
-          }
-        })
-    }
-    this.matDialogRef.close(Constants.RESULT_CLOSE_DIALOG.SUCCESS);
+    })
+
+
   }
 
   onClickDefaultAddress(event: any) {

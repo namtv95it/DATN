@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import { SizeService } from '../../../../shared/service/size/size.service';
 import { ColorService } from '../../../../shared/service/color/color.service';
@@ -72,7 +72,8 @@ export class ProductDetailFormComponent implements OnInit {
     private toastrService: ToastrService,
     private dialog: MatDialog,
     private readonly productService: ProductService,
-    private trimService: TrimService
+    private trimService: TrimService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -82,6 +83,10 @@ export class ProductDetailFormComponent implements OnInit {
   }
   onChange(event) {
     this.fileName = event.target.files[0].name;
+  }
+
+  checkRouter(){
+    this.router.navigate(["/product"]);
   }
   
   //XLSX------------------------
@@ -156,11 +161,11 @@ export class ProductDetailFormComponent implements OnInit {
         if (result === Constant.RESULT_CLOSE_DIALOG.CONFIRM) {
           this.productDetailService.createProductDetail(this.productDetailDto).subscribe({
             next: (res)=>{
-              this.toastrService.success('Thêm chi tiết thành công');
-              this.productDetailDto = [];
+              this.toastrService.success('Nhập hàng thành công');
+              this.router.navigate(["/product"]);
             },
             error: (err)=>{
-              this.toastrService.error('Lỗi thêm chi tiết sản phẩm');
+              this.toastrService.error('Lỗi nhập hàng');
             }
           })
         }
@@ -193,7 +198,9 @@ export class ProductDetailFormComponent implements OnInit {
       disableClose: true
     })
     dialogRef.afterClosed().subscribe(res=>{
-      this.getAllColor();
+      if (res=='submit') {
+        this.getAllColor();
+      }
     })
   }
   

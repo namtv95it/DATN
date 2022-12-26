@@ -88,16 +88,16 @@ export class EditAddressDialogComponent implements OnInit {
   getShippingFee(districtId: any) {
     this.isLoading = true;
     const data = {
-        "shop_id": Ghn.SHOP_ID_NUMBER,
+        "shop_id": 3424019,
         "from_district": 3440,
         "to_district": districtId
     }
     //Get service để lấy ra phương thức vận chuyển: đường bay, đường bộ,..
     this.ghnService.getService(data).subscribe((res: any) => {
-      if (res.data.length<=1) {
-        this.serviceId = res.data[0].service_id;
-      }else{
+      if (res.data && res.data.length > 1) {
         this.serviceId = res.data[1].service_id;
+      }else{
+        this.serviceId = res.data[0].service_id;
       }
         
         const shippingOrder = {
@@ -111,6 +111,7 @@ export class EditAddressDialogComponent implements OnInit {
         this.ghnService.getShippingOrder(shippingOrder).subscribe((res: any) => {
             this.isLoading = false;
             this.shippingTotal = res.data.total;
+            
         })
     })
 }

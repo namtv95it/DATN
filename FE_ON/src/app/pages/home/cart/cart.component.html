@@ -48,7 +48,7 @@
               <table class="table-p">
                 <tbody>
                 <!--====== Row ======-->
-                <tr *ngFor="let cart of carts" [class.low-opacity]="cart.productsDetail.quantity < cart.quantity">
+                <tr *ngFor="let cart of carts" [class.low-opacity]="cart.productsDetail.quantity < cart.quantity || cart.productsDetail.product.status == 0">
                   <td>
                     <div class="table-p__box">
                       <div class="table-p__img-wrap">
@@ -81,7 +81,9 @@
                   </td>
                   <td>
                   <span
-                    class="table-p__price">{{cart.productsDetail.product.price | currency: 'VND' : 'symbol' : '4.0' }}</span>
+                    class="table-p__price">
+                    {{(cart.productsDetail.product.discount !== 0 ? cart.productsDetail.product.price - (cart.productsDetail.product.price * cart.productsDetail.product.discount/100) : cart.productsDetail.product.price) | currencyVND}}
+                  </span>
                   </td>
                   <td>
                     <div class="table-p__input-counter-wrap">
@@ -92,18 +94,20 @@
                           type="number"
                           onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"
                           [value]="cart.quantity"
-                          (change)="updateCart($event, cart.customer.id, cart.productsDetail.id, cart.productsDetail.quantity, cart.quantity, cart.id)"
+                          (change)="updateCart($event, cart.customer.id, cart.productsDetail.id, cart.productsDetail.quantity, cart.quantity)"
                           min="1"
                           [max]="cart.productsDetail.quantity"/>
                         <p class="text-danger" *ngIf="cart.productsDetail.quantity < cart.quantity">
                           Còn {{cart.productsDetail.quantity}} sản phẩm</p>
+                          <p class="text-danger" *ngIf="cart.productsDetail.product.status == 0">
+                            Sản phẩm đã ngừng kinh doanh</p>
                       </div>
                       <!--====== End - Input Counter ======-->
                     </div>
                   </td>
                   <td>
                   <span
-                    class="table-p__price">{{cart.productsDetail.product.price * cart.quantity | currency: 'VND' : 'symbol' : '4.0' }}</span>
+                    class="table-p__price">{{(cart.productsDetail.product.discount !== 0 ? (cart.productsDetail.product.price - (cart.productsDetail.product.price * cart.productsDetail.product.discount/100)) * cart.quantity : cart.productsDetail.product.price * cart.quantity) | currencyVND}}</span>
                   </td>
                   <td>
                     <div class="table-p__del-wrap">

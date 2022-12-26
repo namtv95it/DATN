@@ -177,15 +177,27 @@ export class ExchangeOrderDialogComponent implements OnInit {
     })
 
     for (let i = 0; i < this.dataExchange.length; i++) {
-      this.orderDetailService.saveOrderDetailExchange({
-        id: this.dataExchange[i].id,
-        unitprice: this.dataExchange[i].quantity * this.dataExchange[i].price,
-        exchanges: exchange,
-        quantity: this.dataExchange[i].quantity
-      }).subscribe(res => {
-        console.log(res)
-      })
+      for (let j = 0; j < dataOld.length; j++) {
+        if (this.dataExchange[i].id === dataOld[j].id) {
+          if (this.dataExchange[i].quantity !== dataOld[j].quantity) {
+            //Tao moi order detail
+            this.orderDetailService.saveOrderDetailExchange({
+              id: this.dataExchange[i].id,
+              unitprice: this.dataExchange[i].quantity * this.dataExchange[i].price,
+              exchanges: exchange,
+              quantity: this.dataExchange[i].quantity,
+            }).subscribe(res => console.log(res))
+          } else {
+            //Cap nhat status
+            this.orderDetailService.updateOrderDetailExchange({
+              id: this.dataExchange[i].id,
+              exchanges: exchange
+            }).subscribe(res => console.log(res));
+          }
+        }
+      }
     }
+
   }
 
   setQuantity($event: any, i: any, row: any) {
@@ -204,6 +216,7 @@ export class ExchangeOrderDialogComponent implements OnInit {
       this.selection.clear();
       return;
     }
+
     for (let i = 0; i < this.dataSource.data.length; i++) {
       this.dataSource.data[i].quantityNew = 0;
     }

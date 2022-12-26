@@ -123,11 +123,10 @@
     <button 
     class="btn btn-info" 
     mat-button 
-    mat-dialog-close 
     cdkFocusInitial
-    (click)="updateProduct()"
+    (click)="updateP()"
     >Đồng ý</button>
-    <button class="btn btn-dark" mat-button mat-dialog-close>Hủy</button>
+    <button (click)="cancel()" class="btn btn-dark" mat-button>Hủy</button>
   </div>
 </div>
 

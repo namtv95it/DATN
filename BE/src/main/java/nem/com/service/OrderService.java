@@ -21,6 +21,8 @@ public interface OrderService {
 
     Page<Orders> searchOrderByStatus(SearchOrderDTO searchOrderDTO, Integer page, Integer size);
 
+    Page<Orders> searchOrdersExchange(SearchOrderDTO searchOrderDTO, Integer page, Integer size);
+
     Page<Orders> searchAllOrder(SearchOrderDTO searchOrderDTO, Integer page, Integer size);
     List<Orders> findByStatus(Integer status);
     Page<Orders> getAllOrderSort(Integer page, Integer size);

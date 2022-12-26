@@ -116,13 +116,16 @@
           <!--====== List ======-->
           <ul class="ah-list ah-list--design2 ah-list--link-color-secondary">
             <li>
-              <a routerLink="home">TRANG CHỦ</a>
+              <a routerLinkActive="text-color" routerLink="home">TRANG CHỦ</a>
             </li>
             <li>
-              <a routerLink="products">SẢN PHẨM</a>
+              <a routerLinkActive="text-color" routerLink="products">SẢN PHẨM</a>
             </li>
             <li>
-              <a href="#">SALE</a>
+              <a  routerLinkActive="text-color" routerLink="about">GIỚI THIỆU</a>
+            </li>
+            <li>
+              <a  routerLinkActive="text-color" routerLink="contact">LIÊN HỆ</a>
             </li>
           </ul>
           <!--====== End - List ======-->
@@ -138,10 +141,10 @@
           <!--====== List ======-->
           <ul class="ah-list ah-list--design1 ah-list--link-color-secondary">
             <li>
-              <a routerLink="/home"><i class="fas fa-home u-c-brand"></i></a>
+              <a routerLinkActive="text-color" routerLink="/home"><i class="fas fa-home u-c-brand"></i></a>
             </li>
             <li>
-              <a href="#"><i class="far fa-heart"></i></a>
+              <a href="javascript:void(0)"><i class="far fa-heart"></i></a>
             </li>
             <li class="has-dropdown">
               <a class="mini-cart-shop-link"><i class="fas fa-shopping-bag"></i>
@@ -168,10 +171,10 @@
                       </div>
                       <div class="mini-product__info-wrapper">
                          <span class="mini-product__category">
-                           <a> {{cart.productsDetail.product.category.name}}</a>
+                           <a> {{cart.productsDetail.product.category?.name}}</a>
                          </span>
                         <span class="mini-product__name">
-                          <a [routerLink]="['/product-detail/', cart.productsDetail.product.id]">
+                          <a href="{{'/product-detail/' + cart.productsDetail.product.id}}">
                             {{cart.productsDetail.product.name + ' / ' + cart.productsDetail.size.code + ' / ' + cart.productsDetail.color.name}}
                           </a>
                         </span>
@@ -179,7 +182,7 @@
                         <span class="mini-product__quantity">{{cart.quantity}} x</span>
 
                         <span class="mini-product__price">
-                          {{cart.productsDetail.product.price | currency: 'VND' : 'symbol' : '4.0' }}
+                         {{(cart.productsDetail.product.discount !== 0 ? cart.productsDetail.product.price - (cart.productsDetail.product.price * cart.productsDetail.product.discount/100) : cart.productsDetail.product.price) | currencyVND}}
                         </span>
                       </div>
                     </div>
@@ -197,7 +200,7 @@
                   <div class="mini-total">
                     <span class="subtotal-text">Tổng tiền</span>
 
-                    <span class="subtotal-value">{{subTotal | currency: 'VND' : 'symbol' : '4.0' }}</span>
+                    <span class="subtotal-value">{{subTotal | currencyVND }}</span>
                   </div>
                   <div class="mini-action">
                     <a class="mini-link btn--e-brand-b-2 hover-link" routerLink="cart">Xem giỏ hàng</a>

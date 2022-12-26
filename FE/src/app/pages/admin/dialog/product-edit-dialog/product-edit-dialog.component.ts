@@ -8,6 +8,8 @@ import { Regex } from '../../../../shared/validators/Regex';
 import { UploadCloudinaryService } from '../../../../shared/service/cloudinary/upload-cloudinary.service';
 import { ToastrService } from 'ngx-toastr';
 import { TrimService } from '../../../../shared/service/trim/trim.service';
+import { ConfirmDialogComponent } from '../../../../shared/confirm-dialog/confirm-dialog.component';
+import { Constant } from '../../../../shared/constants/Constant';
 
 @Component({
   selector: 'app-product-edit-dialog',
@@ -46,11 +48,26 @@ export class ProductEditDialogComponent implements OnInit {
     private uploadService: UploadCloudinaryService,
     private toastrService: ToastrService,
     private trimService: TrimService,
+    private matDialog: MatDialog,
+    private matDialogRef: MatDialogRef<ProductEditDialogComponent>
   ) { }
 
   ngOnInit() {
     this.getProductById();
     this.getAllCategory();
+  }
+  updateP(){
+    this.matDialog.open(ConfirmDialogComponent, {
+      disableClose: true,
+      hasBackdrop: true,
+      data: {
+          message: 'Bạn có muốn cập nhật thông tin sản phẩm?'
+      }
+    }).afterClosed().subscribe(result => {
+        if (result === Constant.RESULT_CLOSE_DIALOG.CONFIRM) {
+            this.updateProduct();
+        }
+    })
   }
 
   getProductById(){
@@ -82,12 +99,17 @@ export class ProductEditDialogComponent implements OnInit {
       this.productService.updateProduct(this.productFG.value, this.productFG.value.id).subscribe({
         next: (res) =>{
           this.toastrService.success('Cập nhật thành công');
+          this.matDialogRef.close('submit');
         },
         error: (err)=>{
           this.toastrService.error('Lỗi cập nhật');
         }
       });
     }
+  }
+
+  cancel(){
+    this.matDialogRef.close('cancel');
   }
 
   getAllCategory(){

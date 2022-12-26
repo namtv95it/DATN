@@ -172,17 +172,21 @@
                     </div>
                   </div>
                   <div class="product-m__content">
-                    <div class="product-m__name">
-
+                    <div class="product-m__name" style="overflow: hidden; display: inline-block; width: 200px; text-overflow: ellipsis; white-space: nowrap;">
                       <a [routerLink]="['/product-detail/', pro.id]">{{pro.name}}</a></div>
                     <app-stars [rating]="takeRatingPro(pro.id)"></app-stars>
-                    <div class="product-m__price">{{pro.price | currency: 'VND' : 'symbol' : '4.0-0'}}</div>
+                    <div class="product-m__price">
+                      <span class="{{ (pro.discount != 0 && pro.discount != null ) ? 'product-o__discount' : ''}} m-0" >{{pro.price | currencyVND}}</span>
+                      <span class="mx-2" *ngIf="pro.discount != 0 && pro.discount != null">
+                         {{pro.price  * ( 1 - pro.discount/ 100 ) | currencyVND}}
+                      </span>
+                    </div>
                     <div class="product-m__hover">
                       <div class="product-m__preview-description">
                         <span>{{pro.description}}</span>
                       </div>
                       <div class="product-m__wishlist">
-                        <a class="far fa-heart" href="#" data-tooltip="tooltip" data-placement="top"
+                        <a class="far fa-heart" href="javascript:void(0)" data-tooltip="tooltip" data-placement="top"
                            title="Add to Wishlist"></a></div>
                     </div>
                   </div>
@@ -216,4 +220,5 @@
       </div>
     </div>
   </div>
+</div>
 </div>

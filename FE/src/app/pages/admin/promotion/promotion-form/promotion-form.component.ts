@@ -16,10 +16,12 @@ export class PromotionFormComponent implements OnInit {
 
   title = '' ;
   CONSTAIN = Constant.TYPE_DIALOG ;
+  statusOpening: boolean = false ;
+
 
   form = this.fb.group({
       id: null ,
-      discountName: [ '' , [checkSpace  ]] ,
+      discountName: [ '' , [checkSpace ]] ,
       discount: [ null , [Validators.required , checkDiscount ]] ,
       startDate: [null , [Validators.required ]] ,
       endDate: [null , [Validators.required ]] ,
@@ -40,6 +42,9 @@ export class PromotionFormComponent implements OnInit {
      }else{
         this.title = 'Cập nhập' ;
         this.form.patchValue( this.data.data ) ;
+        if( this.data.data.status === 2 ){
+            this.statusOpening = true;
+        }
      }
   }
 
@@ -57,6 +62,12 @@ export class PromotionFormComponent implements OnInit {
   }
 
   create(){
+      var date = new Date() ;
+      var startDate = new Date( this.form.getRawValue().startDate );
+      if( date.getDay() == startDate.getDay() && date.getMonth() == startDate.getMonth() ){
+          this.form.patchValue({status: 2});
+      }
+
       this.promotionService.create( this.form.getRawValue() ) .subscribe({
           next: value => {
               this.toast.success("Thêm mới thành công") ;
@@ -69,7 +80,18 @@ export class PromotionFormComponent implements OnInit {
   }
 
   update(){
-      this.promotionService.create( this.form.getRawValue() ) .subscribe({
+      var date = new Date();
+      var startDate = new Date(this.form.getRawValue().startDate);
+      var endDate = new Date(this.form.getRawValue().endDate)
+      if( date < startDate ){
+          this.form.patchValue({status: 1});
+      }else if(date > endDate ){
+          this.form.patchValue({status: 3});
+      }else {
+          this.form.patchValue({status: 2});
+      }
+
+      this.promotionService.update( this.form.getRawValue() ) .subscribe({
           next: value => {
               this.toast.success("Cập nhập thành công") ;
               this.dialogRef.close(Constant.RESULT_CLOSE_DIALOG.SUCCESS)

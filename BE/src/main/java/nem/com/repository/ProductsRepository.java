@@ -15,22 +15,22 @@ public interface ProductsRepository extends JpaRepository<Products, Integer> {
             "and (select count(pd) from ProductsDetails  pd where pd.product.id = p.id) > 0")
     List<Products> findByCate(@Param("id") Short id);
     @Query("select p from Products p where p.id in " +
-            "( select distinct pb.product.id from ProductsDetails pb where pb.size.id in (:size) and pb.color.id in (:color) ) " +
-            " and p.category.id in (:category) and p.price >= :min and p.price <= :max")
+            "( select distinct pb.product.id from ProductsDetails pb where  pb.size.id in (:size) and pb.color.id in (:color) ) " +
+            " and p.category.id in (:category) and p.price >= :min and p.price <= :max and p.status = 1")
     Page<Products> findProByAllProperty(@Param("size") Integer[] size , @Param("category") Short[] category ,
                                         @Param("color") Integer[] color , @Param("min") Double min ,
                                         @Param("max") Double max , Pageable pageable)   ;
 
-    @Query(value = "select distinct  p.*  from products p join products_details pd on p.id = pd.product_id\n" +
+    @Query(value = "select distinct p.* from products p join products_details pd on p.id = pd.product_id\n" +
             "                        join order_details od  on od.product_detail_id = pd.id \n" +
             "                        join orders o on o.id = od.order_id \n" +
-            "                        where o.status = 1\n" +
+            "                        where o.status = 3 and p.status = 1 \n" +
             "                        group by p.id\n" +
             "                        order by sum(od.quantity) desc \n" +
             "\t\t\t\t\t    limit 0 , 10 " , nativeQuery = true)
     List<Products> findTop10Product() ;
 
-    @Query(value = "select * from products order by create_date desc limit 0 , 10 ;" , nativeQuery = true)
+    @Query(value = "select * from products where status = 1 order by create_date desc limit 0 , 10 ;" , nativeQuery = true)
     List<Products> findTop10NewProduct();
 
     @Query("select p from Products p order by p.createDate desc ")

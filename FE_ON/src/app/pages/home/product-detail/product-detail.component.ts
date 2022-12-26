@@ -11,6 +11,8 @@ import {ToastrService} from "ngx-toastr";
 import {StorageService} from "../../../shared/service/storage.service";
 import {RatingService} from "../../../shared/service/rating-service/rating.service";
 import {RatingImageService} from "../../../shared/service/rating-image-service/rating-image.service";
+import { GuideSizeComponent } from '../home/product-view/guide-size/guide-size.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-product-detail',
@@ -60,6 +62,7 @@ export class ProductDetailComponent implements OnInit {
               private readonly storageService: StorageService,
               private readonly ratingService: RatingService,
               private readonly ratingImageService: RatingImageService,
+              private readonly matDialog: MatDialog,
               private readonly router: Router) {
   }
 
@@ -93,19 +96,26 @@ export class ProductDetailComponent implements OnInit {
   };
 
   slickInit(e: any) {
-    console.log('slick initialized');
+    // console.log('slick initialized');
   }
 
   breakpoint(e: any) {
-    console.log('breakpoint');
+    // console.log('breakpoint');
   }
 
   afterChange(e: any) {
-    console.log('afterChange');
+    // console.log('afterChange');
   }
 
   beforeChange(e: any) {
-    console.log('beforeChange');
+    // console.log('beforeChange');
+  }
+
+  openGuideSize(){
+    this.matDialog.open(GuideSizeComponent,{
+      width: '1000px',
+      disableClose: true
+    })
   }
 
   getProductSimilar(idCate: number) {

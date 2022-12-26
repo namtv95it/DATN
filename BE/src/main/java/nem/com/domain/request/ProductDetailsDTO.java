@@ -17,6 +17,16 @@ public class ProductDetailsDTO {
 
     private String name;
 
+    private Integer discount;
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
+    }
+
     public String getName() {
         return name;
     }

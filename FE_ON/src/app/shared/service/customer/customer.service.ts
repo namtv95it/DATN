@@ -24,7 +24,6 @@ export class CustomerService {
     return this.apiService.updateCustomer(data, id).subscribe({
       next: (res) => {
         if (res.id) {
-          console.log(res);
           this.toastService.success("Cập nhật khách hàng thành công !");
           this.isCloseDialog.next(true);
         }

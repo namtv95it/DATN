@@ -14,15 +14,15 @@
         <div class="payment-content-item">
             <div class="">Tổng tiền hàng
             </div>
-            <div class="">{{order.totalPrice |currency:' ': '':'0.0-0'}}</div>
+            <div class="">{{order.totalPrice |currency:' ': '':'0.0-0'}}₫</div>
         </div>
         <div class="payment-content-item">
             <div class="">Phí ship</div>
-            <div class="">{{ order.freight |currency:' ': '':'0.0-0'}}</div>
+            <div class="">{{ order.freight |currency:' ': '':'0.0-0'}}₫</div>
         </div>
         <div class="payment-content-item">
             <div class="">Khách cần trả</div>
-            <div class="">{{ order.totalPrice + order.freight |currency:' ': '':'0.0-0'}}</div>
+            <div class="">{{ order.totalPrice + order.freight |currency:' ': '':'0.0-0'}}₫</div>
         </div>
     </div>
 </div>

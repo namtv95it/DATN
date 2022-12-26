@@ -18,7 +18,7 @@
           Giá trị đơn:
         </div>
         <div class="col-12">
-          {{order.total| currency:' ':'symbol':'0.0-2'}}đ
+          {{order.total| currency:' ':'symbol':'0.0-2'}}₫
         </div>
         <div *ngIf="order.status ==6" class="col-12 font-weight-bold mt-3">
           Người bán:
@@ -36,7 +36,7 @@
           Phí vận chuyển:
         </div>
         <div *ngIf="order.status !=6 && tabIndex != 5" class="col-12">
-          {{order.freight| currency:' ':'symbol':'0.0-2'}}đ
+          {{order.freight| currency:' ':'symbol':'0.0-2'}}₫
         </div>
       <div *ngIf="order.status !=6" class="col-12 font-weight-bold mt-3">
           Địa chỉ nhận hàng:
@@ -137,7 +137,7 @@
           <!-- Category Column -->
           <ng-container matColumnDef="price">
             <th class="text-center" mat-header-cell *matHeaderCellDef>Đơn giá</th>
-            <td mat-cell *matCellDef="let row">{{ row.unitprice| currency:' ':'symbol':'0.0-2' }}đ</td>
+            <td mat-cell *matCellDef="let row">{{ row.unitprice| currency:' ':'symbol':'0.0-2' }}₫</td>
           </ng-container>
   
           <!-- Category Column -->
@@ -238,7 +238,7 @@
       <div class="col-12" *ngIf="order.status == 0">
         <form [formGroup]="data">
           <mat-radio-group aria-labelledby="example-radio-group-label" formControlName="pickup_time" class="example-radio-group m-0">
-            <mat-radio-button class="example-radio-button" *ngFor="let date of dateShift" [value]="date.from_time">
+            <mat-radio-button class="example-radio-button" *ngFor="let date of dateShift" (change)="setDateShip($event)" [value]="date.from_time">
               {{date.title}}
             </mat-radio-button>
           </mat-radio-group>
@@ -253,10 +253,12 @@
     <div class="col-6">
       <button *ngIf="order.status==0" class="btn btn-info" mat-button (click)="openEditOrder()">Sửa đơn</button>
       <button *ngIf="order.status==1" class="btn btn-info" mat-button (click)="transporting()">Giao hàng</button>
+      <button *ngIf="order.status==2" class="btn btn-info" mat-button (click)="shipped()">Đã giao</button>
       <button *ngIf="order.status==0" class="btn btn-danger" (click)="cancelStatus()" mat-button>Hủy đơn</button>
       <button *ngIf="order.status==1" class="btn btn-danger" (click)="cancelOrder()" mat-button>Hủy đơn</button>
+
       <div class="mt-2" *ngIf="order.status==8||order.status==9">
-        <span class="text-danger h3 font-weight-bold">Tiền trả khách: {{totalExchange| currency:' ':'symbol':'0.0-2'}} đ</span>
+        <span class="text-danger h3 font-weight-bold">Tiền trả khách: {{totalExchange| currency:' ':'symbol':'0.0-2'}}₫</span>
       </div>
     </div>
     <div class="col-6 d-flex justify-content-end">
@@ -265,7 +267,7 @@
         <button class="btn btn-dark" [disabled]="disableBtn" style="margin-left: 0.5em;" mat-button mat-dialog-close>Đóng</button>
       </div>
       <div *ngIf="order.status==0" class="row">
-        <button class="btn btn-success" mat-button cdkFocusInitial [disabled]="!isFormValid()" (click)="onSubmit()">Xác nhận</button>
+        <button class="btn btn-success" mat-button cdkFocusInitial [disabled]="!dateShip" (click)="onSubmit()">Xác nhận</button>
         <button mat-button mat-dialog-close class="btn btn-dark" mat-button mat-dialog-close>Hủy</button>
       </div>
       <div *ngIf="order.status!=0&&order.status!=8" class="row">

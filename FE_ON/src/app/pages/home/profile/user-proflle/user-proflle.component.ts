@@ -38,7 +38,7 @@ export class UserProflleComponent implements OnInit {
       hasBackdrop: true,
       disableClose: true,
     }).afterClosed().subscribe(rs => {
-      if (rs.type === Constants.RESULT_CLOSE_DIALOG.SUCCESS) {
+      if (rs?.type === Constants.RESULT_CLOSE_DIALOG.SUCCESS) {
         this.avtUrl = rs.url;
       }
     })

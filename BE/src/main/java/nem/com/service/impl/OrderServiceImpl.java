@@ -54,6 +54,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Page<Orders> searchOrdersExchange(SearchOrderDTO searchOrderDTO, Integer page, Integer size) {
+        return this.ordersRepository.searchOrdersExchange(searchOrderDTO.getFullName(),
+                searchOrderDTO.getId(),searchOrderDTO.getOrderCode(),
+                searchOrderDTO.getStatus(),PageRequest.of(page,size));
+    }
+
+    @Override
     public Page<Orders> searchOrderByStatus(SearchOrderDTO searchOrderDTO, Integer page, Integer size) {
         return this.ordersRepository.searchOrderByStatus(searchOrderDTO.getFullName(),
                 searchOrderDTO.getId(),searchOrderDTO.getOrderCode(),
@@ -88,34 +95,34 @@ public class OrderServiceImpl implements OrderService {
         return this.ordersRepository.CustomerBuyMostProduct( request.getStartDate() , request.getEndDate() ) ;
     }
 
-    public void updateDiscountProductStart(Discounts discounts ) {
-        List<ProductDiscount> listPd = this.productDiscountRepository.findAllPd(discounts.getId()) ;
-        List<Integer> listPro = new ArrayList<>();
-
-        for( ProductDiscount x: listPd ){
-            if( x.getProduct().getDiscount() < discounts.getDiscount() || x.getDiscount() == null ){
-                listPro.add(x.getProduct().getId() );
-            }
-        }
-
-        Integer[] arr = listPro.toArray(Integer[]::new) ;
-        discounts.setStatus(2);
-        this.discountsRepository.save( discounts) ;
-        this.discountsRepository.updateDiscountProduct( discounts.getDiscount() , arr );
-    }
-
-    public void updateDiscountProductEnd(Discounts discounts ) {
-        List<ProductDiscount> listPd = this.productDiscountRepository.findAllPd(discounts.getId()) ;
-        List<Integer> listPro = new ArrayList<>();
-
-        for( ProductDiscount x: listPd ){
-            listPro.add(x.getProduct().getId() );
-        }
-
-        discounts.setStatus(3);
-        this.discountsRepository.save(discounts) ;
-        this.discountsRepository.updateDiscountProduct( 0 , listPro.toArray(Integer[]::new)  );
-    }
+//    public void updateDiscountProductStart(Discounts discounts ) {
+//        List<ProductDiscount> listPd = this.productDiscountRepository.findAllPd(discounts.getId()) ;
+//        List<Integer> listPro = new ArrayList<>();
+//
+//        for( ProductDiscount x: listPd ){
+//            if( x.getProduct().getDiscount() < discounts.getDiscount() ){
+//                listPro.add(x.getProduct().getId() );
+//            }
+//        }
+//
+//        Integer[] arr = listPro.toArray(Integer[]::new) ;
+//        discounts.setStatus(2);
+//        this.discountsRepository.save( discounts) ;
+//        this.discountsRepository.updateDiscountProduct( discounts.getDiscount() , arr );
+//    }
+//
+//    public void updateDiscountProductEnd(Discounts discounts ) {
+//        List<ProductDiscount> listPd = this.productDiscountRepository.findAllPd(discounts.getId()) ;
+//        List<Integer> listPro = new ArrayList<>();
+//
+//        for( ProductDiscount x: listPd ){
+//            listPro.add(x.getProduct().getId() );
+//        }
+//
+//        discounts.setStatus(3);
+//        this.discountsRepository.save(discounts) ;
+//        this.discountsRepository.updateDiscountProduct( 0 , listPro.toArray(Integer[]::new)  );
+//    }
 
     @Override
     public void updateOrder(UpdateOrderRequest updateOrderRequest) {
@@ -144,20 +151,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OverviewStatisticalDTO getOverview() {
-        List<Discounts> listd = this.discountsRepository.findDiscountsByStatus() ;
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy") ;
-        String date1 = sdf.format(new Date() ) ;
-        for ( Discounts x: listd ){
-            String date2 = sdf.format( x.getStartDate() ) ;
-            String date3 = sdf.format( x.getEndDate() ) ;
-            if( date2.equalsIgnoreCase(date1) ){
-                this.updateDiscountProductStart(x);
-            }
-
-            if (date3.equalsIgnoreCase(date1)) {
-                this.updateDiscountProductEnd(x);
-            }
-        }
         return this.ordersRepository.getOverview() ;
     }
 
@@ -176,6 +169,9 @@ public class OrderServiceImpl implements OrderService {
         }else {
             type = "%d-%m-%Y" ;
         }
+        System.out.println(request.getEndDate());
+        System.out.println(request.getStartDate());
+        System.out.println(this.ordersRepository.turnoverDTO( request.getStartDate() , request.getEndDate() , type ).size() );
         return this.ordersRepository.turnoverDTO( request.getStartDate() , request.getEndDate() , type );
     }
 

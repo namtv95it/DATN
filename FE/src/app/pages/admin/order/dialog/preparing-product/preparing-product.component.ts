@@ -32,6 +32,8 @@ export class PreparingProductComponent implements OnInit {
   listProductSearch: any = [];
   totalExchange = 0;
 
+  dateShip: any;
+
   disableBtn = false;
 
   tabIndex: any;
@@ -94,14 +96,14 @@ export class PreparingProductComponent implements OnInit {
     "width": 19,
     "height": 10,
     "content": [''],
-    "pick_station_id": 0,
+    "pick_station_id": 1444,
     "deliver_station_id": null,
     "insurance_value": [''],
     "service_id": 0,
     "service_type_id":2,
-    "coupon":[''],
+    "coupon":null,
     "pick_shift": null,
-    "pickup_time": ['',Validators.required],
+    "pickup_time": null,
     "items": ['']
   });
 
@@ -125,14 +127,11 @@ export class PreparingProductComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log(this.dataDialog);
-    
     this.tabIndex = this.dataDialog.tabIndex;
-    this.updateName = this.storageService.getFullNameFromToken()+ ', ID: ' + this.storageService.getIdFromToken();;
+    this.updateName = this.storageService.getFullNameFromToken();
     this.order = this.dataDialog.data.orders;
     // this.order.updateName = this.storageService.getFullNameFromToken();
     this.dataSource = this.dataDialog.data.orderDetailsList;
-    console.log(this.dataSource);
     this.orderDetailsList = this.dataDialog.data.orderDetailsList;
     this.dateShift = this.dataDialog.dateShift;
     this.getDefaultContact();
@@ -147,6 +146,10 @@ export class PreparingProductComponent implements OnInit {
       }
       
     }
+  }
+  setDateShip(e: any){
+    this.dateShip = e.value;
+    
   }
   openEditOrder(){
     let dialogRef = this.matDialog.open(EditOrderComponent,{
@@ -165,8 +168,6 @@ export class PreparingProductComponent implements OnInit {
   }
 
   acceptExchange(row: any){
-    console.log(row);
-    
     this.matDialog.open(OrderExchangeComponent,{
       disableClose: true,
       data: row,
@@ -190,8 +191,6 @@ export class PreparingProductComponent implements OnInit {
   }
 
   cancelExchange(row: any){
-    console.log(row);
-    
     this.matDialog
       .open(ConfirmDialogComponent, {
         disableClose: true,
@@ -204,7 +203,6 @@ export class PreparingProductComponent implements OnInit {
       .subscribe((result) => {
         if (result === Constant.RESULT_CLOSE_DIALOG.CONFIRM) {
           row.status = 3;
-          console.log(row);
           this.disableBtn = true;
           this.orderDetailService.updateOrderDetail(row).subscribe({
             next: res=>{
@@ -291,6 +289,36 @@ export class PreparingProductComponent implements OnInit {
         if (result === Constant.RESULT_CLOSE_DIALOG.CONFIRM) {
           this.order.updateName = this.updateName;
           this.orderService.updateStatus(this.order,2).subscribe({
+            next: res=>{
+              this.toastrService.success('Chuyển trạng thái thành công');
+              this.matDialogRef.close('OK');
+            },
+            error: e=>{
+              this.toastrService.error('Chuyển trạng thái thất bại');
+              console.log(e);
+              
+            }
+          })
+        }
+      });
+  }
+
+  shipped(){
+    
+    this.matDialog
+      .open(ConfirmDialogComponent, {
+        disableClose: true,
+        hasBackdrop: true,
+        data: {
+          message: "Chuyển đơn hàng thành đã giao?",
+        },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result === Constant.RESULT_CLOSE_DIALOG.CONFIRM) {
+          this.order.updateName = this.updateName;
+          this.order.shippedDate = new Date();
+          this.orderService.updateStatus(this.order,3).subscribe({
             next: res=>{
               this.toastrService.success('Chuyển trạng thái thành công');
               this.matDialogRef.close('OK');
@@ -508,10 +536,27 @@ export class PreparingProductComponent implements OnInit {
   subtractQuantity(idPD: any, quantity: any){
     this.productDetailService.getOneProductDetail(idPD).subscribe({
       next: (res) =>{
+        this.productDetail = res;
         this.productDetail.quantity -= quantity;
         this.productDetailService.updateProductDetail(this.productDetail).subscribe({
           next: (r)=>{
-            console.log(r);
+          },
+          error: (e) =>{
+            console.log(e);
+            
+          }
+        })
+      }
+    })
+  }
+
+  plusQuantity(idPD: any, quantity: any){
+    this.productDetailService.getOneProductDetail(idPD).subscribe({
+      next: (res) =>{
+        this.productDetail = res;
+        this.productDetail.quantity += quantity;
+        this.productDetailService.updateProductDetail(this.productDetail).subscribe({
+          next: (r)=>{
             
           },
           error: (e) =>{
@@ -560,7 +605,7 @@ export class PreparingProductComponent implements OnInit {
                 this.isLoading = false;
                 this.checkCancelOrder = true;
                 for (let i = 0; i < this.orderDetailsList.length; i++) {
-                  this.subtractQuantity(this.orderDetailsList[i].productsDetail.id,(0-this.orderDetailsList[i].quantity));
+                  this.plusQuantity(this.orderDetailsList[i].productsDetail.id,this.orderDetailsList[i].quantity);
                 }
                 this.matDialogRef.close('OK');
                 this.toastrService.success('Hủy đơn hàng thành công');
@@ -581,10 +626,6 @@ export class PreparingProductComponent implements OnInit {
       }
       this.isLoading = false;
     })
-    
-  }
-
-  check(){
     
   }
 
@@ -627,7 +668,7 @@ export class PreparingProductComponent implements OnInit {
         this.orderService.updateStatus(this.order,4).subscribe({
           next: (res)=>{
             for (let i = 0; i < this.orderDetailsList.length; i++) {
-              this.subtractQuantity(this.orderDetailsList[i].productsDetail.id,(0-this.orderDetailsList[i].quantity));
+              this.plusQuantity(this.orderDetailsList[i].productsDetail.id,this.orderDetailsList[i].quantity);
             }
             this.matDialogRef.close('OK');
             this.toastrService.success('Hủy đơn thành công');
@@ -709,9 +750,11 @@ export class PreparingProductComponent implements OnInit {
       "required_note": this.requiredNote,
       "weight": this.weight,
       "items": this.items,
+      "pickup_time": this.dateShip,
       "client_order_code": this.order.id+"",
-      "note": 'Khách hàng video khi mở hàng'
+      "note": 'Vui lòng quay video khi mở hàng để có thể đổi hàng khi có vấn đề'
     })
+
     this.ghnService.createOrderGhn(this.data.value).subscribe({
       next: (res)=>{
         this.resultOrder = res;
@@ -725,7 +768,8 @@ export class PreparingProductComponent implements OnInit {
           },
           error: (e)=>{
             console.log(e);
-            
+            this.toastrService.error('Lỗi tạo đơn GHN vui lòng thử lại sau');
+            this.isLoading = false;
           }
         });
         this.order.updateName = this.updateName;
@@ -738,9 +782,13 @@ export class PreparingProductComponent implements OnInit {
       error: (e)=>{
         this.isLoading = false;
         console.log(e);
-        this.toastrService.error('Lỗi xác nhận đơn')
+        this.toastrService.error('Lỗi tạo đơn GHN vui lòng thử lại sau')
       }
     });
+  }
+
+  close(){
+    this.matDialogRef.close('cancel');
   }
 
   printOrderCode(){

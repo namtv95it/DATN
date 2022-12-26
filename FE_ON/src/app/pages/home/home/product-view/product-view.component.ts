@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {ProductService} from "../../../../shared/service/product-service/product.service";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import {HomeComponent} from "../home.component";
 import {Constants} from "../../../../shared/constants/constants.module";
 import {SizeService} from "../../../../shared/service/size-service/size.service";
@@ -14,6 +14,7 @@ import {StorageService} from "../../../../shared/service/storage.service";
 import {RatingService} from "../../../../shared/service/rating-service/rating.service";
 import {RatingImageService} from "../../../../shared/service/rating-image-service/rating-image.service";
 import {NgForm} from "@angular/forms";
+import { GuideSizeComponent } from './guide-size/guide-size.component';
 
 @Component({
   selector: 'app-product-view',
@@ -51,6 +52,7 @@ export class ProductViewComponent implements OnInit {
               private readonly storageService: StorageService,
               private readonly ratingService: RatingService,
               private readonly ratingImageService: RatingImageService,
+              private readonly matDialog: MatDialog,
               private readonly router: Router,
               @Inject(MAT_DIALOG_DATA) public matData: any) {
   }
@@ -82,19 +84,19 @@ export class ProductViewComponent implements OnInit {
   };
 
   slickInit(e: any) {
-    console.log('slick initialized');
+    // console.log('slick initialized');
   }
 
   breakpoint(e: any) {
-    console.log('breakpoint');
+    // console.log('breakpoint');
   }
 
   afterChange(e: any) {
-    console.log('afterChange');
+    // console.log('afterChange');
   }
 
   beforeChange(e: any) {
-    console.log('beforeChange');
+    // console.log('beforeChange');
   }
 
   getProductSimilar(idCate: number) {
@@ -114,6 +116,13 @@ export class ProductViewComponent implements OnInit {
         this.getProductImageById(value.id);
         this.getProductDetailByProductId(value.id);
       }
+    })
+  }
+
+  openGuideSize(){
+    this.matDialog.open(GuideSizeComponent,{
+      width: '1000px',
+      disableClose: true
     })
   }
 

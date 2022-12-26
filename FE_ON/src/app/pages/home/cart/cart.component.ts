@@ -76,8 +76,15 @@ export class CartComponent implements OnInit {
       this.carts = res as any[];
       if (this.carts.length > 0) {
         this.subTotal = this.carts
-          .map(c => c.productsDetail.product.price * c.quantity)
+          .map(c => {
+            if (c.productsDetail.product.discount !== 0) {
+              return (c.productsDetail.product.price - (c.productsDetail.product.price * c.productsDetail.product.discount/100)) * c.quantity;
+            } else {
+              return c.productsDetail.product.price * c.quantity;
+            }
+          })
           .reduce((value, total) => value + total, 0);
+
 
         this.weight = this.carts
           .map(c => c.productsDetail.product.weight * c.quantity)
@@ -133,7 +140,7 @@ export class CartComponent implements OnInit {
     })
   }
 
-  updateCart(event: any, customerId?: any, productDetailId?: any, quantity?: any, cartQuantity?: any, cartId?: any) {
+  updateCart(event: any, customerId?: any, productDetailId?: any, quantity?: any, cartQuantity?: any) {
     const data = {
       customer: {
         id: this.storageService.getIdFromToken(),
@@ -154,12 +161,14 @@ export class CartComponent implements OnInit {
       this.toastService.warning("Số không được lớn hơn số lượng còn lại !")
       return;
     }
-
     this.cartService.updateCart(data).subscribe(data => {
       if (data) {
         this.findAllByCustomerId();
         if (this.districtId !== undefined) {
           this.getShippingFee(this.districtId);
+        }
+        if (this.defaultInfoModel) {
+          this.getShippingFee(this.address.districtId)
         }
         this.cartService.isReload.next(false);
       }
@@ -214,11 +223,7 @@ export class CartComponent implements OnInit {
     }
     //Get service để lấy ra phương thức vận chuyển: đường bay, đường bộ,..
     this.addressService.getService(data).subscribe((res: any) => {
-      if (res.data && res.data.length > 1) {
-        this.serviceId = res.data[1].service_id;
-      }else{
-        this.serviceId = res.data[0].service_id;
-      }
+      this.serviceId = res.data && res.data.length > 1 ? res.data[1].service_id : res.data[0].service_id;
       const shippingOrder = {
         "service_id": this.serviceId,
         "insurance_value": this.subTotal,
@@ -236,7 +241,7 @@ export class CartComponent implements OnInit {
 
   defaultInfo(event: any) {
     if (event.target.value == 'on') {
-      this.defaultInfoModel = true
+      this.defaultInfoModel = true;
       event.target.value = 'off';
       this.getShippingFee(this.address.districtId)
       this.formGroup.patchValue({
@@ -283,6 +288,16 @@ export class CartComponent implements OnInit {
       this.toastService.warning("Giỏ hàng của bạn đang trống !")
       return;
     }
+    console.log(this.carts);
+
+    // for (let i = 0; i < this.carts.length; i++) {
+    //   if (this.carts[i].productsDetail.product.status == 0) {
+    //     this.toastService.warning('Đơn hàng của bạn có sản phẩm đã ngừng kinh doanh');
+    //     this.findAllByCustomerId();
+    //     return;
+    //   }
+
+    // }
 
     if (!this.defaultInfoModel) {
       if (this.formGroup.getRawValue().district === -1 ||
@@ -328,7 +343,7 @@ export class CartComponent implements OnInit {
       hasBackdrop: true,
       width: "25vw",
       data: {
-        message: 'Bạn có muốn đặt đơn hàng này?'
+        message: 'Bạn có muốn đặt hàng?'
       }
     }).afterClosed().subscribe((result) => {
       if (result === Constants.RESULT_CLOSE_DIALOG.CONFIRM) {
@@ -347,8 +362,9 @@ export class CartComponent implements OnInit {
               void this.route.navigate(["/profile/user-order"]);
             },
             error: (err) => {
-              if (err.error.code == 'LIMIT_QUANTITY') {
+              if (err.error.code == 'LIMIT_QUANTITY' || err.error.code == 'NOT_FOUND') {
                 this.toastService.warning(err.error.message);
+                this.findAllByCustomerId();
                 return;
               }
               this.toastService.error("Đặt hàng không thành công !");

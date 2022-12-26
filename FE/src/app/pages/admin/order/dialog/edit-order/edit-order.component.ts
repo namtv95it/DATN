@@ -154,7 +154,6 @@ export class EditOrderComponent implements OnInit {
             this.orderDetail.productsDetail.id = value.id;
             
             this.orderDetailsList.push(this.orderDetail);
-            console.log(this.orderDetailsList);
             
             this.quantityPresentList.push(0);
             this.dataSource = new MatTableDataSource<any>(this.orderDetailsList);
@@ -181,6 +180,10 @@ export class EditOrderComponent implements OnInit {
     return true;
   }
   removeOrderDetail(index: any){
+    if (this.orderDetailsList.length==1) {
+      this.toastrService.warning('Không được xóa hết sản phẩm trong đơn')
+      return;
+    }
     this.matDialog
       .open(ConfirmDialogComponent, {
         disableClose: true,
@@ -235,12 +238,13 @@ export class EditOrderComponent implements OnInit {
     let oldQty = this.quantityPresentList[index];
     let presentQty = null;
     if (event.target.value=='') {
-      event.target.value = oldQty;
+      // event.target.value = oldQty;
       this.toastrService.error('Số lượng không được để trống')
       return;
     }
     if (event.target.value<=0) {
       event.target.value = oldQty;
+      this.quantityList[index] = parseInt(event.target.value);
       this.toastrService.warning('Số lượng phải lớn hơn 0')
       return;
     }
@@ -248,12 +252,14 @@ export class EditOrderComponent implements OnInit {
       presentQty = res.quantity;
       if (newQty==oldQty) {
         return;
-      }else if (presentQty<=0) {
+      }else if ((newQty>oldQty)&&presentQty<=0) {
         event.target.value = oldQty;
+        this.quantityList[index] = parseInt(event.target.value);
         this.toastrService.warning('Số lượng sản phẩm đã hết');
         return;
       }else if ((newQty-oldQty)>presentQty) {
         event.target.value = presentQty + oldQty;
+        this.quantityList[index] = parseInt(event.target.value);
         this.toastrService.warning('Số lượng còn trong kho: ' + presentQty);
         return;
       }else if (newQty!=oldQty&&(newQty-oldQty)<presentQty) {

@@ -1,8 +1,9 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import {Constants} from "../../../../../shared/constants/constants.module";
 import {CustomerService} from "../../../../../shared/service/customer/customer.service";
+import { ConfirmDialogComponent } from '../../../../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-user-profile-form',
@@ -26,6 +27,7 @@ export class UserProfileFormComponent implements OnInit {
   constructor(private readonly fb: FormBuilder,
               @Inject(MAT_DIALOG_DATA) public matDataDialog: any,
               private readonly matDialog: MatDialogRef<UserProfileFormComponent>,
+              private readonly dialog: MatDialog,
               private readonly customerService: CustomerService) {
   }
 
@@ -39,8 +41,20 @@ export class UserProfileFormComponent implements OnInit {
     if (this.formGroup.invalid) {
       return;
     }
-    this.customerService.updateCustomer(this.formGroup.getRawValue(), this.matDataDialog.customer.id);
-    this.matDialog.close(Constants.RESULT_CLOSE_DIALOG.SUCCESS);
+    this.dialog.open(ConfirmDialogComponent, {
+      disableClose: true,
+      hasBackdrop: true,
+      width: "25vw",
+      data: {
+        message: 'Bạn có muốn cập nhật thông tin?'
+      }
+    }).afterClosed().subscribe((result:any) => {
+      if (result === Constants.RESULT_CLOSE_DIALOG.CONFIRM) {
+        this.customerService.updateCustomer(this.formGroup.getRawValue(), this.matDataDialog.customer.id);
+        this.matDialog.close(Constants.RESULT_CLOSE_DIALOG.SUCCESS);
+      }
+    })
+
   }
 
   onDismiss() {

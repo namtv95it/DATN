@@ -29,4 +29,7 @@ public interface CustomersRepository extends JpaRepository<Customers, Integer> {
 
     @Query("SELECT c FROM Customers  c where c.id > 0")
     List<Customers> fillAllCus();
+
+    @Query("SELECT c FROM Customers  c where c.id > 0 and c.status = 1")
+    List<Customers> fillAllByStatus();
 }

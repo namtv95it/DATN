@@ -51,7 +51,7 @@ export class ColorCreateDialogComponent implements OnInit {
         if (result === Constant.RESULT_CLOSE_DIALOG.CONFIRM) {
           this.colorService.createColor(this.colorFormGroup.value).subscribe({
             next: (res) =>{
-              this.matDialogRef.close();
+              this.matDialogRef.close('submit');
               this.toastrService.success('Thêm màu sắc thành công');
             },
             error: (err) =>{
@@ -63,7 +63,9 @@ export class ColorCreateDialogComponent implements OnInit {
     
   }
 
-
+  cancel(){
+    this.matDialogRef.close('cancel');
+  }
 
 
   onChangeColor(event){

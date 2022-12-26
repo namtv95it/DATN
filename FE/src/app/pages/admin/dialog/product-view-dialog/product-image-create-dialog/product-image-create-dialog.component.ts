@@ -5,6 +5,8 @@ import { UploadCloudinaryService } from '../../../../../shared/service/cloudinar
 import { FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../../../../shared/confirm-dialog/confirm-dialog.component';
+import { Constant } from '../../../../../shared/constants/Constant';
 
 @Component({
   selector: 'product-image-create-dialog',
@@ -34,6 +36,20 @@ export class ProductImageCreateDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+  }
+
+  createPI(){
+    this.dialog.open(ConfirmDialogComponent, {
+      disableClose: true,
+      hasBackdrop: true,
+      data: {
+          message: 'Bạn có muốn thêm ảnh sản phẩm?'
+      }
+    }).afterClosed().subscribe(result => {
+        if (result === Constant.RESULT_CLOSE_DIALOG.CONFIRM) {
+            this.createProductImage();
+        }
+    })
   }
 
   async createProductImage(){

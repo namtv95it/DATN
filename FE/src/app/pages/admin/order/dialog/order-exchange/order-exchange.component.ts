@@ -24,7 +24,6 @@ export class OrderExchangeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log(this.dataDialog);
   }
   close(data: any){
     this.matDialogRef.close(data);
@@ -41,7 +40,6 @@ export class OrderExchangeComponent implements OnInit {
       if (result === Constant.RESULT_CLOSE_DIALOG.CONFIRM) {
         if (status == 0) {
           this.dataDialog.status= 2;
-          console.log(this.dataDialog);
           this.matDialogRef.close('success');
           this.orderDetailService.updateOrderDetail(this.dataDialog).subscribe({
             next:res=>{

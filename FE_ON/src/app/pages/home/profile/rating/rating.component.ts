@@ -113,6 +113,10 @@ export class RatingComponent implements OnInit {
   }
 
   async uploadImage( id: number ){
+    if(this.files.length > 5){
+      this.toast.warning("Chỉ chọn được tối đa 5 ảnh !")
+      return;
+    }
     const formData = new FormData();
     try {
       for( let i=0 ; i < this.files.length ; i++  ){

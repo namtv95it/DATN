@@ -42,7 +42,13 @@ export class NavbarComponent implements OnInit {
       this.carts = res as any[];
       if (this.carts.length > 0) {
         this.subTotal = this.carts
-          .map(c => c.productsDetail.product.price * c.quantity)
+          .map(c => {
+            if (c.productsDetail.product.discount !== 0) {
+              return (c.productsDetail.product.price - (c.productsDetail.product.price * c.productsDetail.product.discount/100)) * c.quantity;
+            } else {
+              return c.productsDetail.product.price * c.quantity;
+            }
+          })
           .reduce((value, total) => value + total, 0);
         this.totalCart = this.carts.map(c => c.quantity).reduce((value, total) => value + total);
       } else {
@@ -58,7 +64,7 @@ export class NavbarComponent implements OnInit {
       hasBackdrop: true,
       width: "25vw",
       data: {
-        message: 'Bạn có muốn đặt đơn hàng này?'
+        message: 'Bạn có muốn đặt hàng?'
       }
     }).afterClosed().subscribe((result:any) => {
       if (result === Constants.RESULT_CLOSE_DIALOG.CONFIRM) {

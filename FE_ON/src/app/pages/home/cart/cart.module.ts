@@ -10,6 +10,7 @@ import {MatOptionModule} from "@angular/material/core";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatSelectModule} from "@angular/material/select";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {SharedModule} from "../../../shared/shared.module";
 
 @NgModule({
   declarations: [
@@ -17,17 +18,18 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     EditAddressComponent,
     AddNewAddressComponent
   ],
-  imports: [
-    CommonModule,
-    CartRoutingModule,
-    MatDialogModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatOptionModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatTooltipModule
-  ]
+    imports: [
+        CommonModule,
+        CartRoutingModule,
+        MatDialogModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatOptionModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatTooltipModule,
+        SharedModule
+    ]
 })
 
 export class CartModule { }

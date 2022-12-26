@@ -50,7 +50,7 @@
           <td mat-cell *matCellDef="let row">
             <ng-container [ngSwitch]="row.status">
               <ng-template class="text-primary" [ngSwitchCase]="TYPE_EXCHANGE.CHO_XAC_NHAN">
-                <span class="text-warning">Chờ xác nhận</span>
+                <span class="text-warning">Chờ xác nhận trả hàng</span>
               </ng-template>
               <ng-template [ngSwitchCase]="TYPE_EXCHANGE.DONG_Y_TRA">
                 <span class="text-success">Đồng ý trả</span>
@@ -201,7 +201,7 @@
                   [multiple]="false">
                   <ngx-dropzone-label>
                     <div>
-                      <h5>Video</h5>
+                      <h5>Video bóc hàng</h5>
                     </div>
                   </ngx-dropzone-label>
                   <ngx-dropzone-image-preview

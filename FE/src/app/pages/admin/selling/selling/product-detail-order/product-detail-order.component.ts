@@ -6,6 +6,7 @@ import {logging} from "protractor";
 import {quantity} from "chartist";
 import {Constant} from "../../../../../shared/constants/Constant";
 import {FormControl} from "@angular/forms";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'product-detail-order',
@@ -16,6 +17,7 @@ export class ProductDetailOrderComponent implements OnInit {
 
     constructor(private matDialogRef: MatDialogRef<SellingComponent>,
                 private sellingService: SellingService,
+                private toast: ToastrService,
                 @Inject(MAT_DIALOG_DATA) public dataDialog?: any,
     ) {
     }
@@ -127,6 +129,8 @@ export class ProductDetailOrderComponent implements OnInit {
                     }
                 // Do filter trả về 1 mảng nên phải [0]
 
+            }else{
+                this.toast.error('Vui lòng chọn đủ size và màu sắc!!');
             }
         }
 

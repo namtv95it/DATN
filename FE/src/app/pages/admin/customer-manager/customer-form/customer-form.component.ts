@@ -5,7 +5,6 @@ import {FormBuilder, Validators} from '@angular/forms';
 import {CustomerService} from '../../../../shared/service/customer/customer.service';
 import {UploadCloudinaryService} from '../../../../shared/service/cloudinary/upload-cloudinary.service';
 import {Regex} from '../../../../shared/validators/Regex';
-import {StorageService} from '../../../../shared/service/storage.service';
 
 @Component({
     selector: 'app-customer-form',
@@ -41,16 +40,14 @@ export class CustomerFormComponent implements OnInit {
                 private readonly dialogRef: MatDialogRef<CustomerFormComponent>,
                 private readonly customerService: CustomerService,
                 private readonly uploadService: UploadCloudinaryService,
-                private readonly storageService: StorageService,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any) {
     }
 
     ngOnInit(): void {
+        this.title = this.dataDialog?.type === Constant.TYPE_DIALOG.NEW ? 'Thêm mới khách hàng' : 'Cập nhật khách hàng';
         if (this.dataDialog.type === Constant.TYPE_DIALOG.NEW) {
             this.isUpdate = true;
-            this.title = 'Thêm mới khách hàng';
         } else {
-            this.title = 'Cập nhật khách hàng';
             this.isShowPassword = false;
             this.avatarUrlEdit = this.dataDialog.row.photo;
             this.formGroup.patchValue(this.dataDialog.row);
@@ -100,10 +97,9 @@ export class CustomerFormComponent implements OnInit {
             this.customerService.createCustomer(this.formGroup.getRawValue());
         } else {
             if (this.avatarUrl != undefined) {
-                if (this.formGroup.getRawValue().photo !== this.avatarDefault) {
+                if (this.formGroup.getRawValue().photo && this.formGroup.getRawValue().photo !== this.avatarDefault) {
                     const publicId = this.formGroup.getRawValue().photo.split('/').pop().split('.')[0];
-                    this.uploadService.delete(publicId).subscribe(res => {
-                    });
+                    this.uploadService.delete(publicId).subscribe();
                 }
                 this.formGroup.patchValue({photo: this.avatarUrl[0]});
             } else {
